@@ -1,0 +1,56 @@
+:root {
+  --azul-fondo: #0d47a1;
+  --blanco: #ffffff;
+  --blanco-suave: rgba(255, 255, 255, 0.14);
+  --blanco-suave2: rgba(255, 255, 255, 0.2);
+  --sombra-suave: 0 8px 24px rgba(0, 0, 0, 0.18);
+  --azul-card: #edf2ff;
+  --azul-card-body: #5c7bdc;
+  --gris-texto: #3b4a5f;
+  --verde-estado: #2e7d32;
+  --naranja-estado: #ef6c00;
+  --rojo-estado: #c62828;
+}
+
+/* Reset simple */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: #f3f5f9;
+  color: #111827;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+button {
+  font-family: inherit;
+  border: none;
+  background: none;
+}
+
+/* contenedor de anchura máxima compartido (navbar y layout) */
+.app-max-width {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-inline: 1rem;
+}
+
+@media (max-width: 640px) {
+  .app-max-width {
+    padding-inline: 0.5rem;
+  }
+}

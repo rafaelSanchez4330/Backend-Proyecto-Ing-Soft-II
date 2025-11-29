@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Contenido central - Dashboard</title>
+
+  <!-- Reusa estilos globales + estilos de este componente -->
+  <link rel="stylesheet" href="../index.css" />
+  <link rel="stylesheet" href="main-content.css" />
+</head>
+<body>
+  <main>
+    <div class="app-max-width">
+      <div class="contenido-wrapper">
+        <!-- SECCIÓN SUPERIOR: CASOS RECIENTES -->
+        <section class="casos-section" aria-label="Casos recientes">
+          <div class="casos-header">
+            <div>
+              <div class="casos-title">Casos recientes</div>
+              <div class="casos-subtitle">
+                Desliza para explorar los incidentes activos y finalizados.
+              </div>
+            </div>
+            <div class="casos-controles">
+              <button class="casos-arrow" type="button" id="casosPrev" aria-label="Casos anteriores">
+                &#x2039;
+              </button>
+              <button class="casos-arrow" type="button" id="casosNext" aria-label="Casos siguientes">
+                &#x203A;
+              </button>
+            </div>
+          </div>
+
+          <div class="casos-slider" id="casosSlider">
+            <div class="casos-track">
+              <!-- Las tarjetas de casos se generan desde main-content.js -->
+            </div>
+          </div>
+        </section>
+
+        <!-- PANEL DE CONTROL -->
+        <section class="panel-control" aria-label="Panel de control">
+          <div class="panel-card">
+            <button class="panel-item" type="button" id="btnAdmin">
+              <span class="panel-icono">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M12 2a5 5 0 0 1 5 5v1a5 5 0 0 1-10 0V7a5 5 0 0 1 5-5Zm0 11a3 3 0 0 0 3-3V7a3 3 0 0 0-6 0v3a3 3 0 0 0 3 3Zm0 2c3.31 0 6 2.02 6 4.5V21h-2v-1.5c0-1.41-1.79-2.5-4-2.5s-4 1.09-4 2.5V21H6v-1.5C6 17.02 8.69 15 12 15Z" />
+                </svg>
+              </span>
+              <span>Admin</span>
+            </button>
+
+            <button class="panel-item" type="button" id="btnNewCase">
+              <span class="panel-icono plus">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M12 2a10 10 0 1 0 10 10A10.011 10.011 0 0 0 12 2Zm1 11h3v-2h-3V8h-2v3H8v2h3v3h2Z" />
+                </svg>
+              </span>
+              <span>New case</span>
+            </button>
+
+            <button class="panel-item" type="button" id="btnNewUser">
+              <span class="panel-icono panel-icono-user-new">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M15 12a4 4 0 1 0-4-4 4.003 4.003 0 0 0 4 4Zm0-6a2 2 0 1 1-2 2 2.003 2.003 0 0 1 2-2ZM8 13a4 4 0 1 0-4-4 4.003 4.003 0 0 0 4 4Zm0-6a2 2 0 1 1-2 2 2.003 2.003 0 0 1 2-2Zm7 7a5.99 5.99 0 0 0-4.78 2.39A6.99 6.99 0 0 1 2.062 15 4.987 4.987 0 0 1 8 12h2.1a6.97 6.97 0 0 0 4.9 2Zm0 2a5 5 0 0 0-5 5h2a3 3 0 0 1 6 0h2a5 5 0 0 0-5-5Z" />
+                </svg>
+              </span>
+              <span>New user</span>
+            </button>
+
+            <button class="panel-item" type="button" id="btnEvidence">
+              <span class="panel-icono panel-icono-evidence">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M10 2a6 6 0 0 1 4.8 9.6l4.8 4.8-1.4 1.4-4.8-4.8A6 6 0 1 1 10 2Zm0 2a4 4 0 1 0 4 4 4.005 4.005 0 0 0-4-4Z" />
+                </svg>
+              </span>
+              <span>Evidence</span>
+            </button>
+
+            <button class="panel-item" type="button" id="btnReport">
+              <span class="panel-icono panel-icono-report">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M6 2h9l5 5v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2Zm0 2v16h12V9h-5V4H6Zm7 0v3h3Z" />
+                </svg>
+              </span>
+              <span>Report</span>
+            </button>
+
+            <button class="panel-item" type="button" id="btnTools">
+              <span class="panel-icono panel-icono-tools">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M21.6 7.2 18 10.8l-2.8-.7-.7-2.8 3.6-3.6a4.5 4.5 0 0 0-5.7 5.7L5 17.4V21h3.6l7.4-7.4a4.5 4.5 0 0 0 5.6-6.4Z" />
+                </svg>
+              </span>
+              <span>Tools</span>
+            </button>
+          </div>
+        </section>
+
+        <!-- PANEL DE USUARIO -->
+        <section class="usuario-section" aria-label="Actividad reciente de usuario">
+          <div class="usuario-card">
+            <div class="usuario-top">
+              <div class="usuario-main">
+                <div class="usuario-avatar">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M12 2a5 5 0 0 1 5 5v1a5 5 0 0 1-10 0V7a5 5 0 0 1 5-5Zm0 11a3 3 0 0 0 3-3V7a3 3 0 0 0-6 0v3a3 3 0 0 0 3 3Zm0 2c3.31 0 6 2.02 6 4.5V21h-2v-1.5c0-1.41-1.79-2.5-4-2.5s-4 1.09-4 2.5V21H6v-1.5C6 17.02 8.69 15 12 15Z" />
+                  </svg>
+                </div>
+                <div class="usuario-textos">
+                  <div class="usuario-nombre">user1</div>
+                  <div class="usuario-tiempo">3 min</div>
+                </div>
+              </div>
+
+              <div class="usuario-email">
+                <div class="usuario-email-icono">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M4 4h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Zm0 2v.51l8 5.33 8-5.33V6H4Zm16 2.49-7.44 4.96a2 2 0 0 1-2.12 0L3 8.49V18h17Z" />
+                  </svg>
+                </div>
+                <span>Email address</span>
+              </div>
+            </div>
+
+            <div class="usuario-bottom">
+              <span>New Tool: </span>
+              <a href="https://haveibeenpwned.com/" target="_blank" rel="noopener noreferrer">
+                https://haveibeenpwned.com/
+              </a>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <!-- MODAL EDITAR CASO -->
+  <div class="modal-overlay" id="modalEditarCaso">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalEditarCasoTitulo">
+      <div class="modal-header">
+        <div class="modal-title" id="modalEditarCasoTitulo">Editar caso</div>
+        <span class="badge-estado-modal" id="badgeEstadoActual"></span>
+        <button class="modal-close" type="button" data-modal-close>&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="campo">
+          <label for="campoEstado">Estado</label>
+          <select id="campoEstado">
+            <option value="Active">Active</option>
+            <option value="In progress">In progress</option>
+            <option value="Closed">Closed</option>
+          </select>
+        </div>
+
+        <div class="campo">
+          <label for="campoId">CASE ID</label>
+          <input type="text" id="campoId" />
+        </div>
+
+        <div class="campo modal-body-full">
+          <label for="campoTitulo">Título / incidente</label>
+          <input type="text" id="campoTitulo" />
+        </div>
+
+        <div class="campo modal-body-full">
+          <label for="campoNotas">Notas</label>
+          <textarea id="campoNotas" placeholder="Notas internas del incidente..."></textarea>
+        </div>
+
+        <div class="campo">
+          <label for="campoEncargado">Encargado</label>
+          <input type="text" id="campoEncargado" placeholder="Nombre del analista" />
+        </div>
+
+        <div class="campo">
+          <label for="campoInicioReporte">Inicio (reporte)</label>
+          <input type="datetime-local" id="campoInicioReporte" />
+        </div>
+
+        <div class="campo">
+          <label for="campoInicioAsignacion">Inicio (asignación)</label>
+          <input type="datetime-local" id="campoInicioAsignacion" />
+        </div>
+
+        <div class="campo">
+          <label for="campoFinalizacion">Finalización</label>
+          <input type="datetime-local" id="campoFinalizacion" />
+        </div>
+
+        <div class="campo modal-body-full">
+          <label for="campoEvidenciaEditar">Evidencia (imágenes)</label>
+          <input type="file" id="campoEvidenciaEditar" accept="image/*" multiple />
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secundario" type="button" data-modal-close>Cancelar</button>
+        <button class="btn btn-primario" type="button" id="btnGuardarCaso">Guardar cambios</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL NUEVO CASO -->
+  <div class="modal-overlay" id="modalNuevoCaso">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalNuevoCasoTitulo">
+      <div class="modal-header">
+        <div class="modal-title" id="modalNuevoCasoTitulo">Nuevo caso</div>
+        <button class="modal-close" type="button" data-modal-close>&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="campo modal-body-full">
+          <label for="nuevoPlantilla">Plantilla de caso (opcional)</label>
+          <select id="nuevoPlantilla">
+            <option value="">Selecciona un caso base...</option>
+            <option value="Intento de phishing en correo institucional">Intento de phishing en correo institucional</option>
+            <option value="Ataque de ransomware a servidor CADI">Ataque de ransomware a servidor CADI</option>
+            <option value="Operativo de búsqueda de eventos de riesgo">Operativo de búsqueda de eventos de riesgo</option>
+            <option value="Ataque DDoS a página institucional">Ataque DDoS a página institucional</option>
+            <option value="Investigación de fuga de credenciales">Investigación de fuga de credenciales</option>
+            <option value="Cierre de incidente de suplantación de identidad">Cierre de incidente de suplantación de identidad</option>
+            <option value="Análisis forense de equipo comprometido">Análisis forense de equipo comprometido</option>
+            <option value="Monitoreo de actividad sospechosa en red interna">Monitoreo de actividad sospechosa en red interna</option>
+          </select>
+        </div>
+
+        <div class="campo modal-body-full">
+          <label for="nuevoTitulo">Título / incidente</label>
+          <input type="text" id="nuevoTitulo" placeholder="Describe el nuevo incidente..." />
+        </div>
+
+        <div class="campo">
+          <label for="nuevoEstado">Estado</label>
+          <select id="nuevoEstado">
+            <option value="Active">Active</option>
+            <option value="In progress">In progress</option>
+            <option value="Closed">Closed</option>
+          </select>
+        </div>
+
+        <div class="campo">
+          <label for="nuevoEncargado">Encargado</label>
+          <input type="text" id="nuevoEncargado" placeholder="Nombre del analista" />
+        </div>
+
+        <div class="campo modal-body-full">
+          <label for="nuevoNotas">Notas</label>
+          <textarea id="nuevoNotas" placeholder="Notas internas del nuevo incidente..."></textarea>
+        </div>
+
+        <div class="campo">
+          <label for="nuevoInicioReporte">Inicio (reporte)</label>
+          <input type="datetime-local" id="nuevoInicioReporte" />
+        </div>
+
+        <div class="campo">
+          <label for="nuevoInicioAsignacion">Inicio (asignación)</label>
+          <input type="datetime-local" id="nuevoInicioAsignacion" />
+        </div>
+
+        <div class="campo">
+          <label for="nuevoFinalizacion">Finalización</label>
+          <input type="datetime-local" id="nuevoFinalizacion" />
+        </div>
+
+        <div class="campo modal-body-full">
+          <label for="nuevoEvidencia">Evidencia (imágenes)</label>
+          <input type="file" id="nuevoEvidencia" accept="image/*" multiple />
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secundario" type="button" data-modal-close>Cancelar</button>
+        <button class="btn btn-primario" type="button" id="btnCrearCaso">Crear caso</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL NUEVO USUARIO -->
+  <div class="modal-overlay" id="modalNuevoUsuario">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalNuevoUsuarioTitulo">
+      <div class="modal-header">
+        <div class="modal-title" id="modalNuevoUsuarioTitulo">Nuevo usuario</div>
+        <button class="modal-close" type="button" data-modal-close>&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="campo modal-body-full">
+          <label for="nuevoNombreUsuario">Nombre completo</label>
+          <input type="text" id="nuevoNombreUsuario" placeholder="Nombre y apellidos" />
+        </div>
+
+        <div class="campo modal-body-full">
+          <label for="nuevoCorreoUsuario">Correo electrónico</label>
+          <input type="email" id="nuevoCorreoUsuario" placeholder="usuario@ejemplo.com" />
+        </div>
+
+        <div class="campo">
+          <label for="nuevoPasswordUsuario">Contraseña</label>
+          <input type="password" id="nuevoPasswordUsuario" placeholder="••••••••" />
+        </div>
+
+        <div class="campo">
+          <label for="nuevoCelularUsuario">Número de celular</label>
+          <input type="tel" id="nuevoCelularUsuario" placeholder="+52 ..." />
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secundario" type="button" data-modal-close>Cancelar</button>
+        <button class="btn btn-primario" type="button" id="btnCrearUsuario">Crear usuario</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL EVIDENCIAS -->
+  <div class="modal-overlay" id="modalEvidencias">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalEvidenciasTitulo">
+      <div class="modal-header">
+        <div class="modal-title" id="modalEvidenciasTitulo">Evidencias registradas</div>
+        <button class="modal-close" type="button" data-modal-close>&times;</button>
+      </div>
+      <div class="modal-body modal-body-full">
+        <div class="tabla-evidencias-wrapper">
+          <table class="tabla-evidencias">
+            <thead>
+              <tr>
+                <th>CASE ID</th>
+                <th>Incidente</th>
+                <th>Archivo</th>
+                <th>Fecha</th>
+              </tr>
+            </thead>
+            <tbody id="tablaEvidenciasBody">
+              <!-- filas generadas desde JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secundario" type="button" data-modal-close>Cerrar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL REPORTE -->
+  <div class="modal-overlay" id="modalReporte">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalReporteTitulo">
+      <div class="modal-header">
+        <div class="modal-title" id="modalReporteTitulo">Nuevo reporte</div>
+        <button class="modal-close" type="button" data-modal-close>&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="campo modal-body-full">
+          <label for="reporteTitulo">Título del reporte</label>
+          <input type="text" id="reporteTitulo" placeholder="Resumen corto del reporte" />
+        </div>
+
+        <div class="campo">
+          <label for="reporteCaso">Caso relacionado</label>
+          <select id="reporteCaso">
+            <!-- opciones generadas desde JS -->
+          </select>
+        </div>
+
+        <div class="campo">
+          <label for="reporteTipo">Tipo</label>
+          <select id="reporteTipo">
+            <option value="Incidente">Incidente</option>
+            <option value="Alerta">Alerta</option>
+            <option value="Análisis">Análisis</option>
+            <option value="Otro">Otro</option>
+          </select>
+        </div>
+
+        <div class="campo">
+          <label for="reporteSeveridad">Severidad</label>
+          <select id="reporteSeveridad">
+            <option value="Baja">Baja</option>
+            <option value="Media">Media</option>
+            <option value="Alta">Alta</option>
+            <option value="Crítica">Crítica</option>
+          </select>
+        </div>
+
+        <div class="campo modal-body-full">
+          <label for="reporteResumen">Resumen</label>
+          <textarea id="reporteResumen" placeholder="Resumen ejecutivo del reporte..."></textarea>
+        </div>
+
+        <div class="campo modal-body-full">
+          <label for="reporteDetalle">Detalle técnico</label>
+          <textarea id="reporteDetalle" placeholder="Describe hallazgos, evidencia, acciones tomadas..."></textarea>
+        </div>
+
+        <div class="campo modal-body-full">
+          <label for="reporteAdjuntos">Adjuntar evidencia</label>
+          <input type="file" id="reporteAdjuntos" multiple />
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secundario" type="button" data-modal-close>Cancelar</button>
+        <button class="btn btn-primario" type="button" id="btnCrearReporte">Crear reporte</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL ADMIN -->
+  <div class="modal-overlay" id="modalAdmin">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalAdminTitulo">
+      <div class="modal-header">
+        <div class="modal-title" id="modalAdminTitulo">Admin - usuarios e incidentes</div>
+        <button class="modal-close" type="button" data-modal-close>&times;</button>
+      </div>
+      <div class="modal-body modal-body-admin">
+        <div class="modal-col">
+          <h3>Usuarios</h3>
+          <ul id="adminUsuariosLista" class="admin-usuarios-lista"></ul>
+        </div>
+        <div class="modal-col">
+          <h3>Incidentes</h3>
+          <div id="adminCasosLista" class="admin-casos-lista"></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secundario" type="button" data-modal-close>Cerrar</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="./main-content.js"></script>
+</body>
+</html>

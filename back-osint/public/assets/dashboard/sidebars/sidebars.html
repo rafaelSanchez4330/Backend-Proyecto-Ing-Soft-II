@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Layout paneles laterales</title>
+
+  <link rel="stylesheet" href="index.css" />
+  <link rel="stylesheet" href="sidebars.css" />
+</head>
+<body>
+  <div class="layout-wrapper">
+    <div class="layout-shell app-max-width">
+      <!-- BARRA LATERAL IZQUIERDA -->
+      <aside class="sidebar izquierda" id="sidebarIzquierda">
+        <button
+          class="sidebar-toggle sidebar-toggle-izquierda"
+          type="button"
+          aria-label="Ocultar barra izquierda"
+        >
+          &#x2039;
+        </button>
+        <div class="sidebar-content">
+          <div class="sidebar-header">
+            <div class="sidebar-title">UDINIT</div>
+          </div>
+          <nav class="sidebar-menu" aria-label="Fuentes de datos">
+            <button class="sidebar-item" type="button">Email address</button>
+            <button class="sidebar-item" type="button">Domain name</button>
+            <button class="sidebar-item" type="button">IP &amp; MAC address</button>
+            <button class="sidebar-item" type="button">Social networks</button>
+            <button class="sidebar-item" type="button">Telephone numbers</button>
+            <button class="sidebar-item" type="button">Geolocation</button>
+            <button class="sidebar-item" type="button">Dark Web</button>
+          </nav>
+        </div>
+      </aside>
+
+      <!-- CONTENIDO CENTRAL DE DEMO -->
+      <main class="contenido-central">
+        <div class="contenido-placeholder">
+          <span>Zona de contenido central (aquí irá tu componente principal).</span>
+        </div>
+      </main>
+
+      <!-- BARRA LATERAL DERECHA -->
+      <aside class="sidebar derecha" id="sidebarDerecha">
+        <button
+          class="sidebar-toggle sidebar-toggle-derecha"
+          type="button"
+          aria-label="Ocultar barra derecha"
+        >
+          &#x203A;
+        </button>
+        <div class="sidebar-content">
+          <div class="sidebar-header">
+            <div class="sidebar-title">TOOLS</div>
+          </div>
+          <nav class="sidebar-menu" aria-label="Herramientas">
+            <button class="sidebar-item" type="button">Crypto</button>
+            <button class="sidebar-item" type="button">Web</button>
+            <button class="sidebar-item" type="button">Forensics</button>
+            <button class="sidebar-item" type="button">Pwn</button>
+            <button class="sidebar-item" type="button">Network security</button>
+            <button class="sidebar-item" type="button">Stego</button>
+            <button class="sidebar-item" type="button">Malware analysis</button>
+            <button class="sidebar-item" type="button">Training</button>
+          </nav>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <script src="sidebars.js"></script>
+</body>
+</html>
