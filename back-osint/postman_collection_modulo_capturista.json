@@ -1,0 +1,545 @@
+{
+  "info": {
+    "name": "UDINT - Modulo Capturista",
+    "description": "Coleccion completa de endpoints del Modulo Capturista para la plataforma UDINT",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "version": "1.0.0"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8000/api",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "id_caso",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "id_evidencia",
+      "value": "1",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Autenticacion",
+      "item": [
+        {
+          "name": "Login - Capturista 1",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.collectionVariables.set('token', jsonData.data.token);",
+                  "    pm.environment.set('token', jsonData.data.token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"usuario\": \"capturista1\",\n  \"contrasena\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/login",
+              "host": ["{{base_url}}"],
+              "path": ["login"]
+            },
+            "description": "Iniciar sesion como capturista1"
+          },
+          "response": []
+        },
+        {
+          "name": "Login - Capturista 2",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.collectionVariables.set('token', jsonData.data.token);",
+                  "    pm.environment.set('token', jsonData.data.token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"usuario\": \"capturista2\",\n  \"contrasena\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/login",
+              "host": ["{{base_url}}"],
+              "path": ["login"]
+            },
+            "description": "Iniciar sesion como capturista2"
+          },
+          "response": []
+        },
+        {
+          "name": "Verify Token",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/verify",
+              "host": ["{{base_url}}"],
+              "path": ["verify"]
+            },
+            "description": "Verificar que el token sea valido"
+          },
+          "response": []
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/logout",
+              "host": ["{{base_url}}"],
+              "path": ["logout"]
+            },
+            "description": "Cerrar sesion"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "2. Gestion de Casos",
+      "item": [
+        {
+          "name": "Obtener Casos Asignados",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/capturista/casos",
+              "host": ["{{base_url}}"],
+              "path": ["capturista", "casos"]
+            },
+            "description": "Obtener lista de casos asignados al usuario autenticado"
+          },
+          "response": []
+        },
+        {
+          "name": "Ver Detalle de Caso",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/capturista/casos/{{id_caso}}",
+              "host": ["{{base_url}}"],
+              "path": ["capturista", "casos", "{{id_caso}}"]
+            },
+            "description": "Ver detalles completos de un caso especifico"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "3. Gestion de Evidencias",
+      "item": [
+        {
+          "name": "Obtener Evidencias de Caso",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/capturista/casos/{{id_caso}}/evidencias",
+              "host": ["{{base_url}}"],
+              "path": ["capturista", "casos", "{{id_caso}}", "evidencias"]
+            },
+            "description": "Obtener todas las evidencias de un caso"
+          },
+          "response": []
+        },
+        {
+          "name": "Agregar Evidencia - Captura de Pantalla",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id_caso\": {{id_caso}},\n  \"tipo\": \"Captura de Pantalla\",\n  \"descripcion\": \"Evidencia de conversacion sospechosa en Facebook Messenger. Usuario: @sospechoso123. Fecha: 20 de Enero 2025.\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/capturista/evidencias",
+              "host": ["{{base_url}}"],
+              "path": ["capturista", "evidencias"]
+            },
+            "description": "Agregar nueva evidencia tipo captura de pantalla"
+          },
+          "response": []
+        },
+        {
+          "name": "Agregar Evidencia - Documento",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id_caso\": {{id_caso}},\n  \"tipo\": \"Documento\",\n  \"descripcion\": \"Contrato fraudulento encontrado en servidor comprometido. Hash SHA256: a1b2c3d4e5f6g7h8. Archivo: contrato_falso.pdf\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/capturista/evidencias",
+              "host": ["{{base_url}}"],
+              "path": ["capturista", "evidencias"]
+            },
+            "description": "Agregar nueva evidencia tipo documento"
+          },
+          "response": []
+        },
+        {
+          "name": "Agregar Evidencia - Analisis DNS",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id_caso\": {{id_caso}},\n  \"tipo\": \"Registro DNS\",\n  \"descripcion\": \"Analisis DNS del dominio sospechoso ejemplo-fraude.com:\\n\\nA: 192.168.1.100\\nMX: mail.ejemplo-fraude.com\\nNS: ns1.ejemplo.com, ns2.ejemplo.com\\n\\nRegistrador: GoDaddy\\nFecha registro: 2023-05-10\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/capturista/evidencias",
+              "host": ["{{base_url}}"],
+              "path": ["capturista", "evidencias"]
+            },
+            "description": "Agregar nueva evidencia de analisis DNS"
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar Evidencia",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tipo\": \"Captura de Pantalla - Validada\",\n  \"descripcion\": \"Evidencia de conversacion sospechosa en Facebook Messenger. Usuario: @sospechoso123. Fecha: 20 de Enero 2025. VALIDADA por equipo forense.\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/capturista/evidencias/{{id_evidencia}}",
+              "host": ["{{base_url}}"],
+              "path": ["capturista", "evidencias", "{{id_evidencia}}"]
+            },
+            "description": "Actualizar una evidencia existente"
+          },
+          "response": []
+        },
+        {
+          "name": "Eliminar Evidencia",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/capturista/evidencias/{{id_evidencia}}",
+              "host": ["{{base_url}}"],
+              "path": ["capturista", "evidencias", "{{id_evidencia}}"]
+            },
+            "description": "Eliminar una evidencia (soft delete)"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "4. Reportes Basicos",
+      "item": [
+        {
+          "name": "Generar Reporte Completo",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/capturista/casos/{{id_caso}}/reporte-completo",
+              "host": ["{{base_url}}"],
+              "path": ["capturista", "casos", "{{id_caso}}", "reporte-completo"]
+            },
+            "description": "Generar reporte completo con todas las secciones"
+          },
+          "response": []
+        },
+        {
+          "name": "Generar Reporte de Evidencias",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/capturista/casos/{{id_caso}}/reporte-evidencias",
+              "host": ["{{base_url}}"],
+              "path": ["capturista", "casos", "{{id_caso}}", "reporte-evidencias"]
+            },
+            "description": "Generar reporte unicamente de evidencias"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "5. Reportes Personalizados",
+      "item": [
+        {
+          "name": "Reporte de Persona",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tipo_reporte\": \"persona\",\n  \"datos\": {\n    \"nombre_completo\": \"Juan Carlos Perez Garcia\",\n    \"aliases\": \"JuanP, JPerez, El Ingeniero\",\n    \"fecha_nacimiento\": \"1985-03-15\",\n    \"edad\": \"38\",\n    \"genero\": \"Masculino\",\n    \"nacionalidad\": \"Mexicana\",\n    \"emails\": \"juan.perez@email.com, jperez@work.com\",\n    \"telefonos\": \"+52 444 123 4567\",\n    \"direcciones\": \"Av. Principal 123, San Luis Potosi\",\n    \"redes_sociales\": [\n      {\n        \"plataforma\": \"Facebook\",\n        \"usuario\": \"juan.perez\",\n        \"url\": \"https://facebook.com/juan.perez\",\n        \"estado\": \"Activo\"\n      },\n      {\n        \"plataforma\": \"Twitter\",\n        \"usuario\": \"@juanperez\",\n        \"url\": \"https://twitter.com/juanperez\",\n        \"estado\": \"Activo\"\n      }\n    ],\n    \"investigador\": \"Maria Lopez\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/capturista/casos/{{id_caso}}/reporte-personalizado",
+              "host": ["{{base_url}}"],
+              "path": ["capturista", "casos", "{{id_caso}}", "reporte-personalizado"]
+            },
+            "description": "Generar reporte de investigacion de persona"
+          },
+          "response": []
+        },
+        {
+          "name": "Reporte de Dominio",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tipo_reporte\": \"dominio\",\n  \"datos\": {\n    \"dominio\": \"ejemplo-sospechoso.com\",\n    \"ip\": \"192.168.1.100\",\n    \"registrador\": \"GoDaddy LLC\",\n    \"fecha_registro\": \"2023-05-10\",\n    \"fecha_expiracion\": \"2025-05-10\",\n    \"name_servers\": \"ns1.ejemplo.com, ns2.ejemplo.com\",\n    \"whois\": \"Domain Name: ejemplo-sospechoso.com\\nRegistrar: GoDaddy.com LLC\\nCreation Date: 2023-05-10T10:30:00Z\",\n    \"dns_records\": [\n      {\"tipo\": \"A\", \"valor\": \"192.168.1.100\"},\n      {\"tipo\": \"MX\", \"valor\": \"mail.ejemplo-sospechoso.com\"}\n    ],\n    \"estado\": \"Activo\",\n    \"servidor\": \"Apache/2.4.41\",\n    \"tecnologias\": \"PHP 7.4, MySQL, WordPress\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/capturista/casos/{{id_caso}}/reporte-personalizado",
+              "host": ["{{base_url}}"],
+              "path": ["capturista", "casos", "{{id_caso}}", "reporte-personalizado"]
+            },
+            "description": "Generar reporte de investigacion de dominio"
+          },
+          "response": []
+        },
+        {
+          "name": "Reporte de Email",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tipo_reporte\": \"email\",\n  \"datos\": {\n    \"email\": \"sospechoso@email.com\",\n    \"dominio\": \"email.com\",\n    \"valido\": \"Si\",\n    \"desechable\": \"No\",\n    \"servicios\": [\n      {\n        \"nombre\": \"Facebook\",\n        \"estado\": \"Registrado\",\n        \"detalles\": \"Cuenta activa desde 2018\"\n      }\n    ],\n    \"brechas\": [\n      {\n        \"sitio\": \"LinkedIn\",\n        \"fecha\": \"2021-06-22\",\n        \"datos_comprometidos\": \"Email, Nombre, Telefono\"\n      }\n    ]\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/capturista/casos/{{id_caso}}/reporte-personalizado",
+              "host": ["{{base_url}}"],
+              "path": ["capturista", "casos", "{{id_caso}}", "reporte-personalizado"]
+            },
+            "description": "Generar reporte de investigacion de email"
+          },
+          "response": []
+        },
+        {
+          "name": "Reporte de Telefono",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tipo_reporte\": \"telefono\",\n  \"datos\": {\n    \"numero\": \"+52 444 123 4567\",\n    \"pais\": \"Mexico\",\n    \"operador\": \"Telcel\",\n    \"tipo\": \"Movil\",\n    \"valido\": \"Si\",\n    \"region\": \"San Luis Potosi\",\n    \"ciudad\": \"San Luis Potosi\",\n    \"perfiles\": [\n      {\n        \"plataforma\": \"WhatsApp\",\n        \"informacion\": \"Cuenta activa, ultima conexion hace 2 horas\"\n      }\n    ]\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/capturista/casos/{{id_caso}}/reporte-personalizado",
+              "host": ["{{base_url}}"],
+              "path": ["capturista", "casos", "{{id_caso}}", "reporte-personalizado"]
+            },
+            "description": "Generar reporte de investigacion de telefono"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "6. Gestion de Reportes",
+      "item": [
+        {
+          "name": "Listar Reportes de Caso",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/capturista/casos/{{id_caso}}/reportes",
+              "host": ["{{base_url}}"],
+              "path": ["capturista", "casos", "{{id_caso}}", "reportes"]
+            },
+            "description": "Listar todos los reportes generados para un caso"
+          },
+          "response": []
+        },
+        {
+          "name": "Descargar Reporte",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/capturista/reportes/reporte_caso_1_1737385200.md/descargar",
+              "host": ["{{base_url}}"],
+              "path": ["capturista", "reportes", "reporte_caso_1_1737385200.md", "descargar"]
+            },
+            "description": "Descargar un reporte especifico"
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
+
