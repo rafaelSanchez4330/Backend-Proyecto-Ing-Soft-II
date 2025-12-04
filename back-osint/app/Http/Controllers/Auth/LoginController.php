@@ -32,7 +32,19 @@ class LoginController extends Controller
 
         if (Auth::attempt(['usuario' => $credentials['usuario'], 'password' => $credentials['contrasena']])) {
             $request->session()->regenerate();
-            return redirect()->intended('dashboard');
+
+            $user = Auth::user();
+
+            switch ($user->rol) {
+                case 'admin':
+                    return redirect()->route('dashboard');
+                case 'consultor':
+                    return redirect('/consultor.html');
+                case 'capturista':
+                    return redirect('/capturista/casos');
+                default:
+                    return redirect()->route('dashboard');
+            }
         }
 
         return back()->withErrors([

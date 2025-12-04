@@ -41,7 +41,7 @@ Route::middleware('auth:api')->get('/user', [UserController::class, 'show']);
 Route::middleware(['web'])->group(function () {
     // Dashboard principal
     Route::get('/admin/dashboard', [AdminDashboardController::class, 'index']);
-
+});
 // Rutas protegidas
 Route::middleware('auth:api')->get('/user', [App\Http\Controllers\Api\UserController::class, 'show']);
 // Ruta para el dashboard del administrador
@@ -95,11 +95,11 @@ Route::prefix('consultor')->group(function () {
 
     // Acciones de un usuario
     Route::get('/usuarios/{id}/acciones', 
-        [App\Http\Controllers\Consultor\AccionesController::class, 'accionesUsuario']);
+        [App\Http\Controllers\Api\Consultor\AccionesController::class, 'accionesUsuario']);
 
     // Historial de un caso
     Route::get('/casos/{id}/historial', 
-        [App\Http\Controllers\Consultor\AccionesController::class, 'historialCaso']);
+        [App\Http\Controllers\Api\Consultor\AccionesController::class, 'historialCaso']);
 });
 // =======================
 // RUTAS PLATAFORMAS
@@ -108,10 +108,10 @@ Route::prefix('consultor')->group(function () {
 
     // Plataformas de un usuario
     Route::get('/usuarios/{id}/plataformas',
-        [App\Http\Controllers\Consultor\PlataformasController::class, 'plataformasUsuario']);
+        [App\Http\Controllers\Api\Consultor\PlataformasController::class, 'plataformasUsuario']);
 
     // Todas las plataformas vinculadas
     Route::get('/plataformas',
-        [App\Http\Controllers\Consultor\PlataformasController::class, 'todasPlataformas']);
+        [App\Http\Controllers\Api\Consultor\PlataformasController::class, 'todasPlataformas']);
 });
 
