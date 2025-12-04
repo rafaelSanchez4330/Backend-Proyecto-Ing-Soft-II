@@ -25,19 +25,13 @@ use App\Http\Controllers\Api\CapturistaController;
 |
 */
 
-// ----------------------------------------------------------------------
-// 1. Rutas Públicas y Autenticación
-// ----------------------------------------------------------------------
-
 Route::get('/', function () {
-    // Redirección por defecto: Si prefieres ir al dashboard cambia 'login' por 'dashboard'
-    return redirect()->route('login');
+    return redirect()->route('dashboard');
 });
 
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login']);
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
-
 
 // ----------------------------------------------------------------------
 // 2. Rutas Protegidas (Requieren Login)
@@ -77,21 +71,21 @@ Route::middleware(['auth'])->group(function () {
         // --- API Interna (Usa sesión web) ---
         Route::prefix('api')->group(function () {
             // Gestión de casos asignados
-            Route::get('/casos', [CapturistaController::class, 'getCasosAsignados']);
-            Route::get('/casos/{id}', [CapturistaController::class, 'verCaso']);
-            
+            Route::get('/casos', [App\Http\Controllers\Api\CapturistaController::class, 'getCasosAsignados']);
+            Route::get('/casos/{id}', [App\Http\Controllers\Api\CapturistaController::class, 'verCaso']);
+
             // Gestión de evidencias
-            Route::get('/evidencias', [CapturistaController::class, 'getAllEvidencias']);
-            Route::get('/casos/{idCaso}/evidencias', [CapturistaController::class, 'getEvidencias']);
-            Route::post('/evidencias', [CapturistaController::class, 'agregarEvidencia']);
-            Route::put('/evidencias/{id}', [CapturistaController::class, 'actualizarEvidencia']);
-            Route::delete('/evidencias/{id}', [CapturistaController::class, 'eliminarEvidencia']);
-            
+            Route::get('/evidencias', [App\Http\Controllers\Api\CapturistaController::class, 'getAllEvidencias']);
+            Route::get('/casos/{idCaso}/evidencias', [App\Http\Controllers\Api\CapturistaController::class, 'getEvidencias']);
+            Route::post('/evidencias', [App\Http\Controllers\Api\CapturistaController::class, 'agregarEvidencia']);
+            Route::put('/evidencias/{id}', [App\Http\Controllers\Api\CapturistaController::class, 'actualizarEvidencia']);
+            Route::delete('/evidencias/{id}', [App\Http\Controllers\Api\CapturistaController::class, 'eliminarEvidencia']);
+
             // Generación de reportes
-            Route::get('/casos/{idCaso}/reporte-completo', [CapturistaController::class, 'generarReporteCompleto']);
-            Route::get('/casos/{idCaso}/reporte-evidencias', [CapturistaController::class, 'generarReporteEvidencias']);
-            Route::post('/casos/{idCaso}/reporte-personalizado', [CapturistaController::class, 'generarReportePersonalizado']);
-            
+            Route::get('/casos/{idCaso}/reporte-completo', [App\Http\Controllers\Api\CapturistaController::class, 'generarReporteCompleto']);
+            Route::get('/casos/{idCaso}/reporte-evidencias', [App\Http\Controllers\Api\CapturistaController::class, 'generarReporteEvidencias']);
+            Route::post('/casos/{idCaso}/reporte-personalizado', [App\Http\Controllers\Api\CapturistaController::class, 'generarReportePersonalizado']);
+
             // Gestión de reportes
             Route::get('/casos/{idCaso}/reportes', [CapturistaController::class, 'listarReportes']);
             Route::get('/reportes/{nombreArchivo}/descargar', [CapturistaController::class, 'descargarReporte']);

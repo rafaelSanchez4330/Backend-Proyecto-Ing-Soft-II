@@ -47,20 +47,7 @@ Route::middleware(['web'])->group(function () {
     Route::post('/admin/casos', [AdminDashboardController::class, 'storeCaso']);
     Route::put('/admin/casos/{id}', [AdminDashboardController::class, 'updateCaso']);
     Route::delete('/admin/casos/{id}', [AdminDashboardController::class, 'deleteCaso']);
-
-    // Gestión de Usuarios
-    Route::get('/admin/usuarios', [AdminDashboardController::class, 'getAllUsers']);
-    Route::post('/admin/usuarios', [AdminDashboardController::class, 'storeUsuario']);
-    Route::put('/admin/usuarios/{id}', [AdminDashboardController::class, 'updateUsuario']);
-    Route::delete('/admin/usuarios/{id}', [AdminDashboardController::class, 'deleteUsuario']);
-
-    // Otros
-    Route::get('/admin/capturistas', [AdminDashboardController::class, 'getCapturistas']);
-    Route::get('/admin/bitacora', [AdminDashboardController::class, 'getLogActividad']);
 });
-
-// ----------------------------------------------------------------------
-// 4. Webhook para Alexa
-// ----------------------------------------------------------------------
-// Sin middleware de auth de Laravel, Alexa usa su propia autenticación OAuth
-Route::post('/alexa/webhook', [AlexaController::class, 'handleRequest']);
+// Alexa Skills webhook endpoint
+// No Laravel auth middleware - Alexa handles authentication via OAuth access tokens
+Route::post('/alexa/webhook', [App\Http\Controllers\AlexaController::class, 'handleRequest']);
