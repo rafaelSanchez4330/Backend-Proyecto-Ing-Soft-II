@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Usuarios Activos - Consultor</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            margin: 0;
+        }
+
+        .navbar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar h1 {
+            font-size: 22px;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 30px auto;
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        th, td {
+            border-bottom: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background: #f0f0f0;
+            color: #333;
+        }
+
+        tr:hover {
+            background: #f9f9f9;
+        }
+
+        .btn-ver {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn-ver:hover {
+            background: #5568d8;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <h1>Sistema OSINT - Consultor</h1>
+        <span id="userName">Usuario</span>
+    </nav>
+
+    <div class="container">
+        <h2>Lista de Usuarios Activos</h2>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Usuario</th>
+                    <th>Email</th>
+                    <th>Rol</th>
+                    <th>Detalle</th>
+                </tr>
+            </thead>
+            <tbody id="tablaUsuarios">
+                <!-- Aquí se insertarán los usuarios -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+
+        // VALIDAR SESIÓN Y ROL
+        window.addEventListener("load", () => {
+            const usuario = JSON.parse(localStorage.getItem("usuario"));
+            const token = localStorage.getItem("token");
+
+            if (!token || !usuario) {
+                return window.location.href = "/login.html";
+            }
+
+            if (usuario.rol !== "consultor") {
+                alert("Acceso denegado: Esta página es solo para consultores.");
+                return window.location.href = "/login.html";
+            }
+
+            document.getElementById("userName").textContent = usuario.nombre;
+
+            cargarUsuarios();
+        });
+
+        // ============================
+        //     CARGAR USUARIOS
+        // ============================
+
+        function cargarUsuarios() {
+
+            const token = localStorage.getItem("token");
+
+            fetch("http://localhost:8000/api/usuarios/activos", {
+                headers: {
+                    "Authorization": "Bearer " + token,
+                    "Content-Type": "application/json"
+                }
+            })
+            .then(response => response.json())
+            .then(users => {
+                const tabla = document.getElementById("tablaUsuarios");
+                tabla.innerHTML = "";
+
+                users.forEach(user => {
+                    tabla.innerHTML += `
+                        <tr>
+                            <td>${user.nombre}</td>
+                            <td>${user.usuario}</td>
+                            <td>${user.mail}</td>
+                            <td>${user.rol}</td>
+                            <td>
+                                <button class="btn-ver" onclick="verDetalle(${user.id_usuario})">
+                                    Ver
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            })
+            .catch(err => {
+                alert("Error al cargar usuarios");
+                console.error(err);
+            });
+        }
+
+        function verDetalle(id) {
+            window.location.href = "/consultor/usuarios/detalle-usuario.html?id=" + id;
+        }
+
+    </script>
+
+</body>
+</html>
