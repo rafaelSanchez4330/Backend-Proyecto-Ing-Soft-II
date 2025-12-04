@@ -110,27 +110,40 @@
     <div class="layout-shell app-max-width">
       <!-- BARRA LATERAL IZQUIERDA (UDINIT) -->
       <aside class="sidebar izquierda" id="sidebarIzquierda">
-        <button
-          class="sidebar-toggle sidebar-toggle-izquierda"
-          type="button"
-          aria-label="Ocultar barra izquierda"
-        >
-          &#x2039;
-        </button>
-        <div class="sidebar-content">
-          <div class="sidebar-header">
-            <div class="sidebar-title">UDINIT</div>
+          <button
+            class="sidebar-toggle sidebar-toggle-izquierda"
+            type="button"
+            aria-label="Ocultar barra izquierda"
+          >
+            &#x2039;
+          </button>
+
+          <div class="sidebar-content">
+            <div class="sidebar-header">
+              <div class="sidebar-title">UDINIT</div>
+            </div>
+
+            <nav class="sidebar-menu" aria-label="Categorías de herramientas">
+              @foreach($categorias->sortBy('nombre') as $categoria)
+                  <div class="sidebar-category">
+                      <button class="sidebar-item categoria-btn" type="button" data-cat="{{ $categoria->id_categoria }}">
+                          {{ $categoria->nombre }}
+                      </button>
+
+                      <div class="categoria-tools hidden" id="cat-{{ $categoria->id_categoria }}">
+                          @foreach($herramientas->where('id_categoria', $categoria->id_categoria) as $tool)
+                              <button class="sidebar-subitem" 
+                                  type="button"
+                                  data-url="{{ $tool->link }}">
+                                  {{ $tool->nombre }}
+                              </button>
+                          @endforeach
+                      </div>
+                  </div>
+              @endforeach
+
+            </nav>
           </div>
-          <nav class="sidebar-menu" aria-label="Fuentes de datos">
-            <button class="sidebar-item" type="button">Email address</button>
-            <button class="sidebar-item" type="button">Domain name</button>
-            <button class="sidebar-item" type="button">IP &amp; MAC address</button>
-            <button class="sidebar-item" type="button">Social networks</button>
-            <button class="sidebar-item" type="button">Telephone numbers</button>
-            <button class="sidebar-item" type="button">Geolocation</button>
-            <button class="sidebar-item" type="button">Dark Web</button>
-          </nav>
-        </div>
       </aside>
 
       <!-- ZONA DE CONTENIDO CENTRAL -->
@@ -142,28 +155,30 @@
 
       <!-- BARRA LATERAL DERECHA (TOOLS) -->
       <aside class="sidebar derecha" id="sidebarDerecha">
-        <button
-          class="sidebar-toggle sidebar-toggle-derecha"
-          type="button"
-          aria-label="Ocultar barra derecha"
-        >
-          &#x203A;
-        </button>
-        <div class="sidebar-content">
-          <div class="sidebar-header">
-            <div class="sidebar-title">TOOLS</div>
-          </div>
-          <nav class="sidebar-menu" aria-label="Herramientas">
-            @if(isset($herramientas))
-                @foreach($herramientas as $herramienta)
-                <button class="sidebar-item" type="button">{{ $herramienta->nombre }}</button>
-                @endforeach
-            @else
-                <p style="padding: 1rem; color: var(--text-secondary);">No tools available</p>
-            @endif
-          </nav>
-        </div>
-      </aside>
+            <button class="sidebar-toggle sidebar-toggle-derecha" type="button">
+                &#x203A;
+            </button>
+
+            <div class="sidebar-content">
+                <div class="sidebar-header">
+                    <div class="sidebar-title">TOOLS</div>
+                </div>
+                <nav class="sidebar-menu" aria-label="Herramientas sin categoría">
+                  <button class="sidebar-item" type="button"
+                      onclick="window.open('https://chatgpt.com/g/g-692e71b1700c81919853137b08b627fe-agente-udint-v1-0', '_blank')">
+                      Agente de IA
+                  </button>
+
+                  @foreach($herramientas->where('id_categoria', null) as $tool)
+                      <button class="sidebar-item" type="button"
+                          onclick="window.open('{{ $tool->link }}', '_blank')">
+                          {{ $tool->nombre }}
+                      </button>
+                  @endforeach
+
+              </nav>
+            </div>
+        </aside>
     </div>
   </div>
 
