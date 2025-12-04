@@ -51,7 +51,7 @@
           </svg>
         </button>
 
-        <button class="navbar-icon-btn" type="button" aria-label="Personas">
+        <button class="navbar-icon-btn" type="button" aria-label="Personas" id="btnBitacora">
           <svg viewBox="0 0 24 24">
             <path d="M8 11a3 3 0 1 1 3-3 3 3 0 0 1-3 3Zm8 0a3 3 0 1 1 3-3 3 3 0 0 1-3 3ZM8 13a4 4 0 0 0-4 4v2h8v-2a4 4 0 0 0-4-4Zm8 0a4 4 0 0 0-4 4v2h8v-2a4 4 0 0 0-4-4Z" />
           </svg>

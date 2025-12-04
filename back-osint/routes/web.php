@@ -13,6 +13,7 @@ use App\Http\Controllers\ReportesController; // Versión con Descargas
 // Controladores del Módulo Capturista
 use App\Http\Controllers\CapturistaWebController;
 use App\Http\Controllers\Api\CapturistaController;
+use App\Http\Controllers\ConsultorController;
 
 /*
 |--------------------------------------------------------------------------
@@ -38,7 +39,7 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 // ----------------------------------------------------------------------
 
 Route::middleware(['auth'])->group(function () {
-    
+
     // Dashboard General
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
@@ -55,12 +56,12 @@ Route::middleware(['auth'])->group(function () {
     // -------------------------------------------------------
     Route::get('/reportes', [ReportesController::class, 'index'])->name('reportes.index');
     Route::get('/reportes/{nombreArchivo}/descargar', [ReportesController::class, 'descargar'])->name('reportes.descargar');
-    
+
     // -------------------------------------------------------
     // Módulo Capturista (Middleware específico)
     // -------------------------------------------------------
     Route::middleware(['capturista'])->prefix('capturista')->group(function () {
-        
+
         // --- Vistas Web ---
         Route::get('/casos', [CapturistaWebController::class, 'casos'])->name('capturista.casos');
         Route::get('/casos/{id}', [CapturistaWebController::class, 'casoDetalle'])->name('capturista.caso-detalle');
@@ -98,34 +99,16 @@ Route::middleware(['auth'])->group(function () {
     Route::middleware(['consultor'])->prefix('consultor')->group(function () {
 
         // Vista principal (dashboard del consultor)
-        Route::get('/inicio', function () {
-            return view('consultor.inicio');
-        })->name('consultor.inicio');
+        Route::get('/inicio', [App\Http\Controllers\ConsultorController::class, 'inicio'])->name('consultor.inicio');
 
-        // Más rutas para consultor aquí, si las agregas luego.
-        // ⭐ Lista de usuarios activos
-        Route::get('/usuarios/lista-usuarios', function () {
-            return view('consultor.usuarios.lista-usuarios');
-        })->name('consultor.usuarios.lista-usuarios');
+        // Usuarios
+        Route::get('/usuarios/lista-usuarios', [App\Http\Controllers\ConsultorController::class, 'usuariosIndex'])->name('consultor.usuarios.index');
+        Route::get('/usuarios/{id}', [App\Http\Controllers\ConsultorController::class, 'usuariosShow'])->name('consultor.usuarios.show');
 
-        //Lista detalle usuario
-        Route::get('/usuarios/detalle-usuario', function () {
-            return view('consultor.usuarios.detalle-usuario');
-        })->name('consultor.usuarios.detalle-usuario');
+        // Casos
+        Route::get('/casos/lista-casos', [App\Http\Controllers\ConsultorController::class, 'casosIndex'])->name('consultor.casos.index');
+        Route::get('/casos/{id}', [App\Http\Controllers\ConsultorController::class, 'casosShow'])->name('consultor.casos.show');
 
-        // Lista de casos
-        Route::get('/casos/lista-casos', function () {
-            return view('consultor.casos.lista-casos');
-        })->name('consultor.casos.lista-casos');
-
-        // Detalle de caso
-        Route::get('/casos/detalle-caso', function () {
-            return view('consultor.casos.detalle-caso');
-        })->name('consultor.casos.detalle-caso');
-
-
-
-    
     });
 
 });

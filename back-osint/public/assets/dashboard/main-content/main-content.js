@@ -206,12 +206,7 @@ document.addEventListener('DOMContentLoaded', () => {
       tbody.appendChild(tr);
     });
 
-    document.querySelectorAll('.btn-editar-caso').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        const id = e.target.closest('button').dataset.id;
-        abrirModalEditarCaso(id);
-      });
-    });
+    // Event listeners are handled via delegation
   }
 
   function renderUsuariosTabla(listaUsuarios) {
@@ -637,21 +632,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Override click handlers
-  setTimeout(() => {
-    const btnNewCase = document.getElementById('btnNewCase');
-    const btnNuevoCasoDesdeGestion = document.getElementById('btnNuevoCasoDesdeGestion');
-    const btnGuardarCaso = document.getElementById('btnGuardarCaso');
-
-    // Main panel button opens Create Modal directly
-    if (btnNewCase) btnNewCase.onclick = abrirModalNuevoCaso;
-
-    // Button inside Manage Modal also opens Create Modal
-    if (btnNuevoCasoDesdeGestion) btnNuevoCasoDesdeGestion.onclick = abrirModalNuevoCaso;
-
-    // Save button in Edit Modal
-    if (btnGuardarCaso) btnGuardarCaso.onclick = guardarCambiosCaso;
-  }, 500);
-
+  // setTimeout block removed to avoid conflicts with event delegation
 
   // ==========================================
   // 4. HELPERS
@@ -778,7 +759,14 @@ document.addEventListener('DOMContentLoaded', () => {
     btnNext.addEventListener('click', () => slider.scrollBy({ left: 280, behavior: 'smooth' }));
   }
 
-  function abrirModal(modal) { if (modal) modal.classList.add('activo'); }
+  function abrirModal(modal) {
+    if (modal) {
+      console.log("🔓 Abriendo modal:", modal.id);
+      modal.classList.add('activo');
+    } else {
+      console.error("❌ Intento de abrir modal inexistente");
+    }
+  }
   function cerrarModal(modal) { if (modal) modal.classList.remove('activo'); }
 
   // ==========================================
@@ -826,7 +814,25 @@ document.addEventListener('DOMContentLoaded', () => {
     // Button: Edit User (Open Modal)
     if (target.closest('.btn-editar-usuario')) {
       const id = target.closest('.btn-editar-usuario').dataset.id;
+      console.log("🖱️ Click en Editar Usuario", id);
       abrirModalEditarUsuario(id);
+    }
+
+    // Button: Edit Case (Open Modal)
+    if (target.closest('.btn-editar-caso')) {
+      const id = target.closest('.btn-editar-caso').dataset.id;
+      console.log("🖱️ Click en Editar Caso", id);
+      abrirModalEditarCaso(id);
+    }
+
+    // Button: Save Case (Submit)
+    if (target.closest('#btnGuardarCaso')) {
+      guardarCambiosCaso();
+    }
+
+    // Button: New Case from Management (Open Modal)
+    if (target.closest('#btnNuevoCasoDesdeGestion')) {
+      abrirModalNuevoCaso();
     }
 
     // Button: Delete User

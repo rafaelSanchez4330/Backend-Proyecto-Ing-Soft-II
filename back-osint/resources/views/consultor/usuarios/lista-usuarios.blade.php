@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -30,7 +31,7 @@
             background: white;
             padding: 25px;
             border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
 
         h2 {
@@ -44,7 +45,8 @@
             margin-top: 15px;
         }
 
-        th, td {
+        th,
+        td {
             border-bottom: 1px solid #ddd;
             padding: 12px;
             text-align: left;
@@ -72,13 +74,29 @@
         .btn-ver:hover {
             background: #5568d8;
         }
+
+        .btn-back {
+            display: inline-block;
+            margin-top: 25px;
+            padding: 10px 20px;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            transition: background .3s;
+        }
+
+        .btn-back:hover {
+            background: #5567d9;
+        }
     </style>
 </head>
+
 <body>
 
     <nav class="navbar">
         <h1>Sistema OSINT - Consultor</h1>
-        <span id="userName">Usuario</span>
+        <span id="userName">{{ Auth::user()->nombre }}</span>
     </nav>
 
     <div class="container">
@@ -95,77 +113,26 @@
                 </tr>
             </thead>
             <tbody id="tablaUsuarios">
-                <!-- Aquí se insertarán los usuarios -->
+                @foreach($usuarios as $usuario)
+                    <tr>
+                        <td>{{ $usuario->nombre }}</td>
+                        <td>{{ $usuario->usuario }}</td>
+                        <td>{{ $usuario->mail }}</td>
+                        <td>{{ $usuario->rol }}</td>
+                        <td>
+                            <a href="{{ route('consultor.usuarios.show', $usuario->id_usuario) }}" class="btn-ver"
+                                style="text-decoration: none;">
+                                Ver
+                            </a>
+                        </td>
+                    </tr>
+                @endforeach
             </tbody>
         </table>
+
+        <a href="{{ route('consultor.inicio') }}" class="btn-back">← Volver al Panel</a>
     </div>
 
-    <script>
-        // VALIDAR SESIÓN Y ROL
-        window.addEventListener("load", () => {
-            const usuario = JSON.parse(localStorage.getItem("usuario"));
-            const token = localStorage.getItem("token");
-
-            if (!token || !usuario) {
-                return window.location.href = "/login.html";
-            }
-
-            if (usuario.rol !== "consultor") {
-                alert("Acceso denegado: Esta página es solo para consultores.");
-                return window.location.href = "/login.html";
-            }
-
-            document.getElementById("userName").textContent = usuario.nombre;
-
-            cargarUsuarios();
-        });
-
-        // ============================
-        //     CARGAR USUARIOS
-        // ============================
-
-        function cargarUsuarios() {
-
-            const token = localStorage.getItem("token");
-
-            fetch("{{ url('/api/usuarios/activos') }}", {
-                headers: {
-                    "Authorization": "Bearer " + token,
-                    "Content-Type": "application/json"
-                }
-            })
-            .then(response => response.json())
-            .then(users => {
-                const tabla = document.getElementById("tablaUsuarios");
-                tabla.innerHTML = "";
-
-                users.forEach(user => {
-                    tabla.innerHTML += `
-                        <tr>
-                            <td>${user.nombre}</td>
-                            <td>${user.usuario}</td>
-                            <td>${user.mail}</td>
-                            <td>${user.rol}</td>
-                            <td>
-                                <button class="btn-ver" onclick="verDetalle(${user.id_usuario})">
-                                    Ver
-                                </button>
-                            </td>
-                        </tr>
-                    `;
-                });
-            })
-            .catch(err => {
-                alert("Error al cargar usuarios");
-                console.error(err);
-            });
-        }
-
-        function verDetalle(id) {
-            window.location.href = "/consultor/usuarios/detalle-usuario?id=" + id;
-        }
-
-    </script>
-
 </body>
+
 </html>

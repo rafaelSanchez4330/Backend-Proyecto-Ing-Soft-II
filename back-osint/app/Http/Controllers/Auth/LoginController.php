@@ -39,9 +39,9 @@ class LoginController extends Controller
                 case 'admin':
                     return redirect()->route('dashboard');
                 case 'consultor':
-                    return redirect('consultor.inicio');
+                    return redirect('consultor/inicio');
                 case 'capturista':
-                    return redirect('/capturista/casos');
+                    return redirect('dashboard');
                 default:
                     return redirect()->route('dashboard');
             }

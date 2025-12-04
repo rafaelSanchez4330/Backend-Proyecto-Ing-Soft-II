@@ -46,7 +46,7 @@
   <!-- PANEL DE CONTROL -->
   <section class="panel-control" aria-label="Panel de control">
     <div class="panel-card">
-      <button class="panel-item" type="button">
+      <button class="panel-item" type="button" id="btnAdmin">
         <span class="panel-icono">
           <svg viewBox="0 0 24 24" aria-hidden="true">
             <path
@@ -67,7 +67,7 @@
         </a>
       @endif
 
-      <button class="panel-item" type="button">
+      <button class="panel-item" type="button" id="btnNewCase">
         <span class="panel-icono plus">
           <svg viewBox="0 0 24 24" aria-hidden="true">
             <path d="M12 2a10 10 0 1 0 10 10A10.011 10.011 0 0 0 12 2Zm1 11h3v-2h-3V8h-2v3H8v2h3v3h2Z" />
@@ -76,7 +76,7 @@
         <span>New case</span>
       </button>
 
-      <button class="panel-item" type="button">
+      <button class="panel-item" type="button" id="btnNewUser">
         <span class="panel-icono panel-icono-user-new">
           <svg viewBox="0 0 24 24" aria-hidden="true">
             <path
@@ -342,6 +342,37 @@
     </div>
   </div>
 
+  <!-- MODAL BITACORA -->
+  <div class="modal-overlay" id="modalBitacora" style="z-index: 1150;">
+    <div class="modal modal-xl" role="dialog" aria-modal="true" aria-labelledby="modalBitacoraTitulo"
+      style="width: 95%; max-width: 1000px; display: flex; flex-direction: column; max-height: 90vh;">
+      <div class="modal-header">
+        <div class="modal-title" id="modalBitacoraTitulo">Activity Log</div>
+        <button class="modal-close" type="button" data-modal-close>&times;</button>
+      </div>
+      <div class="modal-body" style="padding: 1.5rem; overflow-y: auto; display: block;">
+        <div class="tabla-container" style="overflow-x: auto; border: 1px solid #334155; border-radius: 0.375rem;">
+          <table class="tabla-gestion" style="width: 100%; border-collapse: collapse; color: white; min-width: 700px;">
+            <thead>
+              <tr style="border-bottom: 1px solid #334155; text-align: left; background-color: #0f172a;">
+                <th style="padding: 1rem; border: 1px solid #334155;">Fecha/Hora</th>
+                <th style="padding: 1rem; border: 1px solid #334155;">Usuario</th>
+                <th style="padding: 1rem; border: 1px solid #334155;">Acción</th>
+                <th style="padding: 1rem; border: 1px solid #334155;">Descripción</th>
+              </tr>
+            </thead>
+            <tbody id="tablaBitacoraBody">
+              <!-- JS injected -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secundario" type="button" data-modal-close>Cerrar</button>
+      </div>
+    </div>
+  </div>
+
   <!-- MODAL EDITAR USUARIO -->
   <div class="modal-overlay" id="modalEditarUsuario" style="z-index: 1100;">
     <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalEditarUsuarioTitulo">
@@ -377,4 +408,140 @@
       </div>
     </div>
   </div>
+  <!-- MODAL NUEVO CASO -->
+  <div class="modal-overlay" id="modalNuevoCaso" style="z-index: 1100;">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalNuevoCasoTitulo">
+      <div class="modal-header">
+        <div class="modal-title" id="modalNuevoCasoTitulo">Nuevo Caso</div>
+        <button class="modal-close" type="button" data-modal-close>&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="campo modal-body-full">
+          <label for="nuevoTitulo">Título</label>
+          <input type="text" id="nuevoTitulo" placeholder="Título del caso" />
+        </div>
+
+        <div class="campo">
+          <label for="nuevoEstado">Estado</label>
+          <select id="nuevoEstado">
+            <option value="activo">Activo</option>
+            <option value="en_progreso">En Progreso</option>
+            <option value="pausado">Pausado</option>
+            <option value="cerrado">Cerrado</option>
+          </select>
+        </div>
+
+        <div class="campo">
+          <label for="nuevoEncargado">Encargado (Capturista)</label>
+          <select id="nuevoEncargado">
+            <option value="">Seleccionar capturista...</option>
+          </select>
+        </div>
+
+        <div class="campo modal-body-full">
+          <label for="nuevoNotas">Descripción / Notas</label>
+          <textarea id="nuevoNotas" placeholder="Descripción inicial del caso..."></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secundario" type="button" data-modal-close>Cancelar</button>
+        <button class="btn btn-primario" type="button" id="btnCrearCaso">Crear Caso</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL NUEVO USUARIO -->
+  <div class="modal-overlay" id="modalNuevoUsuario" style="z-index: 1100;">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalNuevoUsuarioTitulo">
+      <div class="modal-header">
+        <div class="modal-title" id="modalNuevoUsuarioTitulo">Nuevo Usuario</div>
+        <button class="modal-close" type="button" data-modal-close>&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="campo modal-body-full">
+          <label for="nuevoNombreUsuario">Nombre completo</label>
+          <input type="text" id="nuevoNombreUsuario" placeholder="Ej: Ana López" />
+        </div>
+
+        <div class="campo modal-body-full">
+          <label for="nuevoCorreoUsuario">Correo electrónico</label>
+          <input type="email" id="nuevoCorreoUsuario" placeholder="usuario@osint.com" />
+        </div>
+
+        <div class="campo">
+          <label for="nuevoPasswordUsuario">Contraseña</label>
+          <input type="password" id="nuevoPasswordUsuario" placeholder="******" />
+        </div>
+
+        <div class="campo">
+          <label for="nuevoCelularUsuario">Celular</label>
+          <input type="text" id="nuevoCelularUsuario" placeholder="Ej: 555-123-4567" />
+        </div>
+
+        <div class="campo modal-body-full">
+          <label for="nuevoRolUsuario">Rol</label>
+          <select id="nuevoRolUsuario">
+            <option value="capturista">Capturista</option>
+            <option value="consultor">Consultor</option>
+            <option value="admin">Admin</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secundario" type="button" data-modal-close>Cancelar</button>
+        <button class="btn btn-primario" type="button" id="btnCrearUsuario">Crear Usuario</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL EDITAR CASO -->
+  <div class="modal-overlay" id="modalEditarCaso" style="z-index: 1100;">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalEditarCasoTitulo">
+      <div class="modal-header">
+        <div class="modal-title" id="modalEditarCasoTitulo">Editar Caso</div>
+        <button class="modal-close" type="button" data-modal-close>&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="campo">
+          <label for="campoId">ID Caso</label>
+          <input type="text" id="campoId" readonly class="input-readonly" />
+        </div>
+
+        <div class="campo">
+          <label for="campoInicioReporte">Fecha Creación</label>
+          <input type="text" id="campoInicioReporte" readonly class="input-readonly" />
+        </div>
+
+        <div class="campo modal-body-full">
+          <label for="campoTitulo">Título</label>
+          <input type="text" id="campoTitulo" />
+        </div>
+
+        <div class="campo">
+          <label for="campoEstado">Estado</label>
+          <select id="campoEstado">
+            <option value="activo">Activo</option>
+            <option value="en_progreso">En Progreso</option>
+            <option value="pausado">Pausado</option>
+            <option value="cerrado">Cerrado</option>
+          </select>
+        </div>
+
+        <div class="campo">
+          <label for="campoEncargado">Encargado Actual</label>
+          <input type="text" id="campoEncargado" readonly class="input-readonly" />
+        </div>
+
+        <div class="campo modal-body-full">
+          <label for="campoNotas">Descripción / Notas</label>
+          <textarea id="campoNotas"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secundario" type="button" data-modal-close>Cancelar</button>
+        <button class="btn btn-primario" type="button" id="btnGuardarCaso">Guardar Cambios</button>
+      </div>
+    </div>
+  </div>
+
 @endsection

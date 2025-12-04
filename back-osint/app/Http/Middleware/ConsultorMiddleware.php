@@ -16,6 +16,16 @@ class ConsultorMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
+        if (Auth::check()) {
+            \Illuminate\Support\Facades\Log::info('ConsultorMiddleware Check', [
+                'user_id' => Auth::id(),
+                'rol' => Auth::user()->rol,
+                'is_consultor' => (Auth::user()->rol === 'consultor')
+            ]);
+        } else {
+            \Illuminate\Support\Facades\Log::info('ConsultorMiddleware: User not authenticated');
+        }
+
         if (!Auth::check() || Auth::user()->rol !== 'consultor') {
             return redirect()->route('login')->with('error', 'Acceso no autorizado');
         }

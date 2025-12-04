@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -24,7 +25,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
 
         .navbar h1 {
@@ -38,7 +39,7 @@
         }
 
         .btn-logout {
-            background: rgba(255,255,255,0.2);
+            background: rgba(255, 255, 255, 0.2);
             color: white;
             border: 1px solid white;
             padding: 8px 20px;
@@ -48,7 +49,7 @@
         }
 
         .btn-logout:hover {
-            background: rgba(255,255,255,0.3);
+            background: rgba(255, 255, 255, 0.3);
         }
 
         .container {
@@ -61,7 +62,7 @@
             background: white;
             padding: 30px;
             border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             margin-bottom: 30px;
         }
 
@@ -85,13 +86,13 @@
             background: white;
             padding: 25px;
             border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
 
         .stat-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         }
 
         .stat-card h3 {
@@ -120,12 +121,13 @@
         }
     </style>
 </head>
+
 <body>
 
     <nav class="navbar">
         <h1>Sistema OSINT - Consultor</h1>
         <div class="user-info">
-            <span id="userName">Usuario</span>
+            <span id="userName">{{ Auth::user()->nombre }}</span>
             <button class="btn-logout" onclick="logout()">Cerrar Sesión</button>
         </div>
     </nav>
@@ -143,7 +145,7 @@
                 <h3>Usuarios</h3>
                 <ul class="stat-options">
                     <li onclick="goTo('consultor/usuarios/lista-usuarios')">Lista de usuarios activos</li>
-                    <li onclick="goTo('consultor/usuarios/detalle-usuario')">Detalle de usuario</li>
+                    <!-- <li onclick="goTo('consultor/usuarios/detalle-usuario')">Detalle de usuario</li> -->
                 </ul>
             </div>
 
@@ -152,84 +154,65 @@
                 <h3>Casos</h3>
                 <ul class="stat-options">
                     <li onclick="goTo('consultor/casos/lista-casos')">Lista de casos</li>
-                    <li onclick="goTo('consultor/casos/detalle-caso.html')">Detalle de caso con creador</li>
-                    <li onclick="goTo('consultor/casos/usuarios-asignados.html')">Usuarios asignados a un caso</li>
+                    <!-- <li onclick="goTo('consultor/casos/detalle-caso.html')">Detalle de caso con creador</li>
+                    <li onclick="goTo('consultor/casos/usuarios-asignados.html')">Usuarios asignados a un caso</li> -->
                 </ul>
             </div>
 
             <!-- EVIDENCIAS -->
             <div class="stat-card">
                 <h3>Evidencias</h3>
-                <ul class="stat-options">
+                <!-- <ul class="stat-options">
                     <li onclick="goTo('consultor/evidencias/evidencias-caso.html')">Evidencias de un caso</li>
-                </ul>
+                </ul> -->
             </div>
 
             <!-- HERRAMIENTAS -->
             <div class="stat-card">
                 <h3>Herramientas</h3>
-                <ul class="stat-options">
+                <!-- <ul class="stat-options">
                     <li onclick="goTo('consultor/herramientas/lista-herramientas.html')">Lista de herramientas</li>
-                    <li onclick="goTo('consultor/herramientas/herramientas-categoria.html')">Herramientas de una categoría</li>
-                </ul>
+                    <li onclick="goTo('consultor/herramientas/herramientas-categoria.html')">Herramientas de una
+                        categoría</li>
+                </ul> -->
             </div>
 
             <!-- ACCIONES E HISTORIAL -->
             <div class="stat-card">
                 <h3>Acciones e historial</h3>
-                <ul class="stat-options">
+                <!-- <ul class="stat-options">
                     <li onclick="goTo('consultor/acciones/acciones-usuario.html')">Acciones de un usuario</li>
                     <li onclick="goTo('consultor/acciones/historial-caso.html')">Historial de un caso</li>
-                </ul>
+                </ul> -->
             </div>
 
             <!-- PLATAFORMAS -->
             <div class="stat-card">
                 <h3>Plataformas</h3>
-                <ul class="stat-options">
+                <!-- <ul class="stat-options">
                     <li onclick="goTo('consultor/plataformas/plataformas-vinculadas.html')">Plataformas vinculadas</li>
-                </ul>
+                </ul> -->
+
             </div>
 
         </div>
     </div>
 
     <script>
-        // VALIDACIÓN DE ROL Y USUARIO
-        window.addEventListener('load', () => {
-            const token = localStorage.getItem('token');
-            const usuario = localStorage.getItem('usuario');
-
-            if (!token) {
-                window.location.href = '/login';
-                return;
-            }
-
-            if (usuario) {
-                const userData = JSON.parse(usuario);
-
-                if (userData.rol !== 'consultor') {
-                    alert("Acceso denegado: Esta página es solo para consultores.");
-                    window.location.href = '/login';
-                    return;
-                }
-
-                document.getElementById('userName').textContent = userData.nombre;
-            }
-        });
-
-        // Redirección a subpáginas
-        function goTo(url) {
-            window.location.href = "/" + url;
-        }
-
         // Logout
         function logout() {
-            localStorage.removeItem('token');
-            localStorage.removeItem('usuario');
-            window.location.href = '/login';
+            // Submit the logout form
+            document.getElementById('logout-form').submit();
+        }
+
+        function goTo(url) {
+            window.location.href = "{{ url('/') }}/" + url;
         }
     </script>
+    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+        @csrf
+    </form>
 
 </body>
+
 </html>

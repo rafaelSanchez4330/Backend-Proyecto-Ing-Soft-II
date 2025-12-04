@@ -87,7 +87,7 @@
 
     <nav class="navbar">
         <h1>Lista de Casos</h1>
-        <span id="userSession"></span>
+        <span id="userSession">{{ Auth::user()->nombre }}</span>
     </nav>
 
     <div class="container">
@@ -103,82 +103,21 @@
                 </tr>
             </thead>
             <tbody id="tablaCasos">
+                @foreach($casos as $caso)
+                <tr onclick="window.location.href='{{ route('consultor.casos.show', $caso->id_caso) }}'">
+                    <td>{{ $caso->id_caso }}</td>
+                    <td>{{ $caso->nombre }}</td>
+                    <td>{{ $caso->tipo_caso }}</td>
+                    <td>{{ $caso->estado }}</td>
+                    <td>{{ $caso->creador ? $caso->creador->nombre : 'Desconocido' }}</td>
+                </tr>
+                @endforeach
             </tbody>
         </table>
 
-        <a href="/consultor/inicio" class="btn-back">← Volver al Panel</a>
+        <a href="{{ route('consultor.inicio') }}" class="btn-back">← Volver al Panel</a>
 
     </div>
-
-<script>
-    // VALIDAR SESIÓN Y ROL
-    window.addEventListener("load", () => {
-        const usuario = JSON.parse(localStorage.getItem("usuario"));
-        const token = localStorage.getItem("token");
-
-        if (!token || !usuario) {
-            return window.location.href = "/login.html";
-        }
-
-        if (usuario.rol !== "consultor") {
-            alert("Acceso denegado: Esta página es solo para consultores.");
-            return window.location.href = "/login.html";
-        }
-
-        document.getElementById("userSession").textContent = usuario.nombre;
-
-        cargarCasos();
-    });
-
-
-    // ======================================
-    //             CARGAR CASOS
-    // ======================================
-    async function cargarCasos() {
-        try {
-            const token = localStorage.getItem("token");
-
-            const response = await fetch("{{ url('/api/consultor/casos') }}", {
-                headers: {
-                    "Authorization": "Bearer " + token,
-                    "Content-Type": "application/json"
-                }
-            });
-
-            const data = await response.json();
-
-            if (!data.success) {
-                alert("Error al cargar la lista de casos");
-                return;
-            }
-
-            const casos = data.casos;
-            const tbody = document.getElementById("tablaCasos");
-
-            casos.forEach(caso => {
-                const tr = document.createElement("tr");
-
-                tr.innerHTML = `
-                    <td>${caso.id_caso}</td>
-                    <td>${caso.nombre}</td>
-                    <td>${caso.tipo_caso}</td>
-                    <td>${caso.estado}</td>
-                    <td>${caso.creador ? caso.creador.nombre : "Desconocido"}</td>
-                `;
-
-                tr.onclick = () => {
-                    window.location.href = "/consultor/casos/detalle-caso?id=" + caso.id_caso;
-                };
-
-                tbody.appendChild(tr);
-            });
-
-        } catch (error) {
-            console.error(error);
-            alert("No se pudo conectar con el servidor");
-        }
-    }
-</script>
 
 </body>
 </html>
