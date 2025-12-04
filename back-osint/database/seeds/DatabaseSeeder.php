@@ -18,8 +18,14 @@ class DatabaseSeeder extends Seeder
             HerramientasSeeder::class,
             CasosSeeder::class,
             ChatbotsSeeder::class,
+            CapturistaTestSeeder::class, // Datos de prueba para mgarcia
+            // ModuloCapturistaSeeder::class, // Descomentar para datos de prueba del modulo capturista
         ]);
         
-        $this->command->info('¡Todos los seeders ejecutados correctamente!');
+        $this->command->info('Todos los seeders ejecutados correctamente!');
+        $this->command->info('');
+        $this->command->info('Usuario mgarcia creado con 5 casos de prueba asignados');
+        $this->command->info('Para datos de prueba del Modulo Capturista, ejecuta:');
+        $this->command->info('php artisan db:seed --class=ModuloCapturistaSeeder');
     }
 }

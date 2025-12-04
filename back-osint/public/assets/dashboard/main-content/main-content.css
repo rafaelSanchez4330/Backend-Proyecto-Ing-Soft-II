@@ -155,6 +155,11 @@
   color: var(--rojo-estado);
 }
 
+.estado-pausado {
+  color: #94a3b8;
+  /* Gris azulado para pausado */
+}
+
 .caso-body {
   margin-bottom: 0.65rem;
   border-radius: 0.6rem;
@@ -688,3 +693,70 @@
     grid-template-columns: minmax(0, 1fr);
   }
 }
+
+/* =========================================
+   SLIDE-OVER (PANEL LATERAL)
+   ========================================= */
+.slide-over-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 9998;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease;
+}
+
+.slide-over.activo {
+  transform: translateX(0);
+}
+
+.slide-over-header {
+  padding: 1.5rem;
+  border-bottom: 1px solid var(--borde-panel);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.slide-over-title {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--texto-principal);
+}
+
+.slide-over-close {
+  background: none;
+  border: none;
+  font-size: 2rem;
+  color: var(--texto-secundario);
+  cursor: pointer;
+  line-height: 1;
+}
+
+.slide-over-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1.5rem;
+}
+
+.slide-over-footer {
+  padding: 1.5rem;
+  border-top: 1px solid var(--borde-panel);
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+/* Estilos para inputs de solo lectura */
+.input-readonly {
+  background-color: rgba(255, 255, 255, 0.05);
+  cursor: not-allowed;
+  color: var(--texto-secundario);
+  border-color: transparent;
+}
+.caso-body { flex-direction: column !important; }

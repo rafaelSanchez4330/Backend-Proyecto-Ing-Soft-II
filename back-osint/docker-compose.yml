@@ -1,4 +1,29 @@
 services:
+    app:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        image: back-osint-app
+        container_name: back-osint-app
+        ports:
+            - '8000:8080'
+        environment:
+            APP_NAME: 'Laravel'
+            APP_ENV: local
+            APP_DEBUG: 'true'
+            APP_URL: 'http://localhost:8000'
+            DB_CONNECTION: pgsql
+            DB_HOST: pgsql
+            DB_PORT: 5432
+            DB_DATABASE: '${DB_DATABASE}'
+            DB_USERNAME: '${DB_USERNAME}'
+            DB_PASSWORD: '${DB_PASSWORD:-secret}'
+        volumes:
+            - '.:/var/www/html'
+        networks:
+            - sail
+        depends_on:
+            - pgsql
     pgsql:
         image: 'postgres:15'
         ports:

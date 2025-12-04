@@ -3,6 +3,12 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
+// Importamos los controladores aquí arriba para mantener las rutas limpias
+use App\Http\Controllers\AdminDashboardController;
+use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\AlexaController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -14,10 +20,27 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// Rutas de autenticación (públicas)
-Route::post('/login', [App\Http\Controllers\Api\AuthController::class, 'login']);
-Route::post('/logout', [App\Http\Controllers\Api\AuthController::class, 'logout']);
-Route::post('/verify', [App\Http\Controllers\Api\AuthController::class, 'verify']);
+// ----------------------------------------------------------------------
+// 1. Rutas de autenticación (Públicas)
+// ----------------------------------------------------------------------
+Route::post('/login', [AuthController::class, 'login']);
+Route::post('/logout', [AuthController::class, 'logout']);
+Route::post('/verify', [AuthController::class, 'verify']);
+
+// ----------------------------------------------------------------------
+// 2. Rutas protegidas por Token (API)
+// ----------------------------------------------------------------------
+Route::middleware('auth:api')->get('/user', [UserController::class, 'show']);
+
+// ----------------------------------------------------------------------
+// 3. Rutas del Panel de Administración (Middleware WEB)
+// ----------------------------------------------------------------------
+// Nota: Usas el middleware 'web' aquí. Esto habilitará sesiones y protección CSRF.
+// Asegúrate de que esto es lo que quieres en un archivo api.php.
+
+Route::middleware(['web'])->group(function () {
+    // Dashboard principal
+    Route::get('/admin/dashboard', [AdminDashboardController::class, 'index']);
 
 // Rutas protegidas
 Route::middleware('auth:api')->get('/user', [App\Http\Controllers\Api\UserController::class, 'show']);
