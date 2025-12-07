@@ -224,7 +224,61 @@
       </div>
     </div>
   </div>
+  <!-- MODAL TOOLS -->
+      <div id="modalTools" class="modal-overlay">
+        <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalToolsTitulo">
+          <div class="modal-header">
+            <div class="modal-title" id="modalToolsTitulo">Gestión de Herramientas</div>
+            <button class="modal-close" type="button" data-modal-close>&times;</button>
+          </div>
 
+          <div class="modal-body modal-body-tools">
+            <!-- Formulario -->
+            <form id="formAgregarTool" class="form-modal">
+              <div class="form-group">
+                <label for="toolNombre">Nombre de la herramienta</label>
+                <input type="text" id="toolNombre" name="toolNombre" required />
+              </div>
+
+              <div class="form-group">
+                <label for="toolUrl">Enlace / URL</label>
+                <input type="url" id="toolUrl" name="toolUrl" placeholder="https://ejemplo.com" required />
+              </div>
+
+              <div class="form-group">
+                <label for="toolCategoria">Categoría</label>
+                <select id="toolCategoria" name="toolCategoria" required>
+                  <option value="">Seleccione una opción</option>
+                  <option value="none">Sin categoría</option>
+                  <option value="other">Otra categoría...</option>
+                </select>
+              </div>
+
+              <!-- Input para nueva categoría (visible sólo si elige "Otra") -->
+              <div class="form-group hidden" id="categoriaNuevaGroup">
+                <label for="categoriaNueva">Nueva categoría</label>
+                <input type="text" id="categoriaNueva" name="categoriaNueva" placeholder="Escribe la categoría" />
+              </div>
+
+              <div class="form-actions">
+                <button type="submit" class="btn btn-primario">Agregar herramienta</button>
+                <button type="button" class="btn btn-secundario" data-modal-close>Cerrar</button>
+              </div>
+            </form>
+
+            <hr class="modal-sep">
+
+            <!-- Lista de herramientas -->
+            <div class="tools-list" id="toolsLista">
+              <!-- items --> 
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <small class="muted">Tip: Puedes pegar un enlace válido (https://) para acceder rápido.</small>
+          </div>
+        </div>
+      </div>
   <!-- MODAL ADMIN -->
   <div class="modal-overlay" id="modalAdmin">
     <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalAdminTitulo">
@@ -408,6 +462,7 @@
       </div>
     </div>
   </div>
+@endsection
   <!-- MODAL NUEVO CASO -->
   <div class="modal-overlay" id="modalNuevoCaso" style="z-index: 1100;">
     <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalNuevoCasoTitulo">

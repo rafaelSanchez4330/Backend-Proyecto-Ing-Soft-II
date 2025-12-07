@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 // Controladores Generales y de Auth
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\HerramientaController;
 
 // Controladores de Reportes (Mantengo ambos por si usas las dos versiones)
 use App\Http\Controllers\ReportsController; // Versión con PDF/Obsidian
@@ -42,6 +43,10 @@ Route::middleware(['auth'])->group(function () {
 
     // Dashboard General
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/herramientas', [HerramientaController::class, 'index']);
+    Route::get('/categorias', [HerramientaController::class, 'categorias']);
+    Route::post('/herramientas', [HerramientaController::class, 'store']);
+    Route::delete('/herramientas/{id}', [HerramientaController::class, 'destroy']);
 
     // -------------------------------------------------------
     // Módulo de Reportes (Versión A - PDF/Obsidian)

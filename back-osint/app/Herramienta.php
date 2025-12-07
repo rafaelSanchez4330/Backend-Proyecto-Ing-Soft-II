@@ -7,23 +7,19 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Herramienta extends Model
 {
-    use SoftDeletes;
-
     protected $table = 'herramientas';
     protected $primaryKey = 'id_herramienta';
+
     public $timestamps = false;
-    
-    protected $fillable = ['nombre', 'enlace'];
-    
-    protected $dates = ['deleted_at'];
-    
-    public function categorias()
+
+    protected $fillable = [
+        'nombre',
+        'link',
+        'id_categoria'
+    ];
+
+    public function categoria()
     {
-        return $this->belongsToMany(
-            CategoriaHerramienta::class,
-            'rel_herramientas_categorias',
-            'id_herramienta',
-            'id_categoria'
-        );
+        return $this->belongsTo(CategoriaHerramienta::class, 'id_categoria');
     }
 }
