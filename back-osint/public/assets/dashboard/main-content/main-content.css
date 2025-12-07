@@ -577,8 +577,117 @@
   font-size: 0.7rem;
 }
 
-/* admin modal */
+/* TOOLS modal */
+.modal-body-tools {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
 
+.form-modal .form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin-bottom: 0.5rem;
+}
+
+.form-modal input[type="text"],
+.form-modal input[type="url"],
+.form-modal select {
+  border-radius: 0.6rem;
+  border: 1px solid rgba(148, 163, 184, 0.6);
+  background: rgba(15, 23, 42, 0.95);
+  color: #e5e7eb;
+  padding: 0.35rem 0.5rem;
+  font-size: 0.9rem;
+}
+
+.form-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.tools-list {
+  max-height: 300px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.tool-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+  padding: 0.6rem;
+  border-radius: 0.6rem;
+  background: rgba(15, 23, 42, 0.7);
+  border: 1px solid rgba(148, 163, 184, 0.06);
+}
+
+.tool-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+}
+
+.tool-meta .tool-name {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #e5e7eb;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tool-meta .tool-link {
+  font-size: 0.8rem;
+  color: rgba(148, 163, 184, 0.95);
+  text-decoration: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tool-meta .tool-cat {
+  font-size: 0.77rem;
+  color: rgba(148, 163, 184, 0.8);
+}
+
+.tool-actions {
+  display: flex;
+  gap: 0.4rem;
+  align-items: center;
+}
+
+.btn-delete-tool {
+  background: rgba(239, 68, 68, 0.12);
+  color: #ef4444;
+  font-size: 0.78rem;
+  padding: 0.32rem 0.45rem;
+  border-radius: 0.45rem;
+  border: 1px solid rgba(239, 68, 68, 0.25);
+  cursor: pointer;
+}
+
+.btn-open-tool {
+  background: rgba(99, 102, 241, 0.12);
+  color: #6366f1;
+  font-size: 0.78rem;
+  padding: 0.32rem 0.45rem;
+  border-radius: 0.45rem;
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  cursor: pointer;
+}
+
+.hidden { display: none !important; }
+.modal-sep { border: 0; height: 1px; background: rgba(148,163,184,0.05); margin: 8px 0 12px; }
+.muted { color: rgba(148,163,184,0.7); font-size: 0.8rem; }
+
+/* admin modal */
 .modal-body-admin {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }

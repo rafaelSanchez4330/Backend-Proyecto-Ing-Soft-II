@@ -11,6 +11,26 @@
   align-items: stretch;
 }
 
+/* MENU CATEGORIAS */
+.categoria-tools {
+    padding-left: 10px;
+}
+
+.sidebar-subitem {
+    display: block;
+    width: 100%;
+    padding: 6px 12px;
+    background: none;
+    color: var(--text-color);
+    text-align: left;
+    border: none;
+    cursor: pointer;
+}
+
+.hidden {
+    display: none !important;
+}
+
 /* PANEL LATERAL GENÉRICO */
 
 .sidebar {

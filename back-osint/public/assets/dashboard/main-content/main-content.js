@@ -5,7 +5,8 @@ document.addEventListener('DOMContentLoaded', () => {
   // ==========================================
   let casos = [];
   let rolUsuario = 'invitado'; // Default role
-
+  let herramientas = [];
+  let categoriasDB = [];
   // ==========================================
   // 2. REFERENCIAS AL DOM
   // ==========================================
@@ -19,6 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const btnNewUser = document.getElementById('btnNewUser');
   const btnEvidence = document.getElementById('btnEvidence');
   const btnReport = document.getElementById('btnReport');
+  const btnTools = document.getElementById('btnTools');
 
   // Modales existentes (Menú lateral)
   const modalEditar = document.getElementById('modalEditarCaso');
@@ -26,9 +28,20 @@ document.addEventListener('DOMContentLoaded', () => {
   const modalNuevoUsuario = document.getElementById('modalNuevoUsuario');
   const modalEvidencias = document.getElementById('modalEvidencias');
   const modalReporte = document.getElementById('modalReporte');
-  const modalAdmin = document.getElementById('modalAdmin');
+  const modalAdmin = document.getElementById('modalAdmin'); 
+  const modalTools = document.getElementById('modalTools');
   const modalGestionCasos = document.getElementById('modalGestionCasos');
-
+      
+  // Campos modal Tools
+  const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+  const formAgregarTool = document.getElementById('formAgregarTool');
+  const toolsLista = document.getElementById('toolsLista');
+  const toolNombre = document.getElementById('toolNombre');
+  const toolUrl = document.getElementById('toolUrl');
+  const toolCategoria = document.getElementById('toolCategoria');
+  const categoriaNuevaGroup = document.getElementById('categoriaNuevaGroup');
+  const categoriaNueva = document.getElementById('categoriaNueva');
+    
   // Botones dentro de modales
   const btnNuevoCasoDesdeGestion = document.getElementById('btnNuevoCasoDesdeGestion');
   const btnCrearCaso = document.getElementById('btnCrearCaso');
@@ -103,7 +116,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
   }
-
+    
   async function cargarCasosGestion() {
     try {
       const respuesta = await fetch('/api/admin/casos');
@@ -357,6 +370,15 @@ document.addEventListener('DOMContentLoaded', () => {
   if (selectEstado) selectEstado.addEventListener('change', filtrarYRenderizarCasos);
   if (inputFecha) inputFecha.addEventListener('change', filtrarYRenderizarCasos);
   if (inputBusquedaUsuarios) inputBusquedaUsuarios.addEventListener('input', filtrarYRenderizarUsuarios);
+  if (btnTools) {
+    btnTools.addEventListener('click', async () => {
+      await cargarCategorias();
+      await cargarHerramientas();
+      inicializarSelectCategorias();
+      renderHerramientas();
+      abrirModal(modalTools);
+    });
+  }
 
   // Tab Switching Logic
   document.querySelectorAll('.tab-btn').forEach(btn => {
@@ -672,7 +694,289 @@ document.addEventListener('DOMContentLoaded', () => {
   function buscarCasoPorId(id) {
     return casos.find(c => c.id === id);
   }
+  // ====== MODAL TOOLS ======
+  async function cargarCategorias() {
+    try {
+      const res = await fetch('/categorias');
+      categoriasDB = await res.json();
 
+      toolCategoria.innerHTML = `
+        <option value="">Seleccione una opción</option>
+        <option value="none">Sin categoría</option>
+        ${categoriasDB.map(cat => `
+          <option value="${cat.id}">${cat.nombre}</option>
+        `).join('')}
+        <option value="other">Otra categoría...</option>
+      `;
+    } catch (err) {
+      console.error('Error cargando categorías:', err);
+      toolCategoria.innerHTML = `
+        <option value="">Seleccione una opción</option>
+        <option value="none">Sin categoría</option>
+        <option value="other">Otra categoría...</option>
+      `;
+    }
+  }
+
+  function inicializarSelectCategorias() {
+    const sel = toolCategoria;
+    const group = categoriaNuevaGroup;
+    const input = categoriaNueva;
+
+    if (sel.value === 'other') {
+      group.classList.remove('hidden');
+      input.required = true;
+    } else {
+      group.classList.add('hidden');
+      input.required = false;
+      input.value = '';
+    }
+
+    sel.onchange = null;
+
+    sel.addEventListener('change', () => {
+      if (sel.value === 'other') {
+        group.classList.remove('hidden');
+        input.required = true;
+      } else {
+        group.classList.add('hidden');
+        input.required = false;
+        input.value = '';
+      }
+    });
+  }
+
+  async function cargarHerramientas() {
+    try {
+      const res = await fetch('/herramientas');
+      herramientas = await res.json();
+    } catch (err) {
+      console.error('Error cargando herramientas:', err);
+      herramientas = [];
+    }
+  }
+  async function cargarSidebars() {
+    try {
+      const res = await fetch('/herramientas');
+      herramientas = await res.json();
+
+      refrescarSidebarDerecha();
+      refrescarSidebarIzquierda();
+
+    } catch (error) {
+      console.error("Error cargando sidebars:", error);
+    }
+  }
+
+  function refrescarSidebarDerecha() {
+    const cont = document.querySelector("#sidebarDerecha .sidebar-menu");
+    if (!cont) return;
+
+    let html = `
+      <button class="sidebar-item" type="button"
+          onclick="window.open('https://chatgpt.com/g/g-692e71b1700c81919853137b08b627fe-agente-udint-v1-0', '_blank')">
+          Agente de IA
+      </button>
+    `;
+
+    const sinCategoria = herramientas.filter(h => !h.id_categoria);
+
+    sinCategoria.forEach(h => {
+      html += `
+        <button class="sidebar-item" onclick="window.open('${h.link}', '_blank')">
+          ${h.nombre}
+        </button>
+      `;
+    });
+
+    cont.innerHTML = html;
+  }
+
+  function refrescarSidebarIzquierda() {
+    const cont = document.querySelector("#sidebarIzquierda .sidebar-menu");
+    if (!cont) return;
+
+    cont.innerHTML = "";
+
+    const porCategoria = {};
+
+    herramientas.forEach(h => {
+      if (!h.categoria) return; 
+
+      const cat = h.categoria.nombre;
+
+      if (!porCategoria[cat]) porCategoria[cat] = [];
+      porCategoria[cat].push(h);
+    });
+
+    Object.keys(porCategoria).forEach(cat => {
+
+      const catId = cat.replace(/\s+/g, "_");
+
+      cont.innerHTML += `
+        <button class="sidebar-item categoria-btn" data-target="${catId}">
+          ${cat}
+        </button>
+
+        <div class="categoria-contenido hidden" id="${catId}">
+          ${porCategoria[cat].map(h => `
+            <button class="sidebar-subitem" onclick="window.open('${h.link}', '_blank')">
+              ${h.nombre}
+            </button>
+          `).join("")}
+        </div>
+      `;
+    });
+
+    document.querySelectorAll(".categoria-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const target = document.getElementById(btn.dataset.target);
+        target.classList.toggle("hidden");
+      });
+    });
+  }
+  formAgregarTool.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const nombre = toolNombre.value.trim();
+    const url = toolUrl.value.trim();
+    if (!nombre || !url) return alert('Nombre y URL son requeridos.');
+
+    let categoria_id = toolCategoria.value;
+    let nuevaCategoriaTexto = null;
+
+    if (categoria_id === 'other') {
+      nuevaCategoriaTexto = categoriaNueva.value.trim();
+      if (!nuevaCategoriaTexto) return alert('Escribe la nueva categoría.');
+    }
+
+    const data = {
+      nombre,
+      link: url,
+      categoria: categoria_id,
+      categoria_nueva: nuevaCategoriaTexto
+    };
+
+    try {
+      const res = await fetch('/herramientas', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrfToken },
+        body: JSON.stringify(data)
+      });
+
+      const nueva = await res.json();
+      herramientas.unshift(nueva);
+
+      renderHerramientas();
+      await cargarSidebars();
+      formAgregarTool.reset();
+      categoriaNuevaGroup.classList.add('hidden');
+
+    } catch (err) {
+      console.error('Error guardando herramienta:', err);
+      alert('Error guardando herramienta.');
+    }
+  });
+
+  function renderHerramientas() {
+    if (!toolsLista) return;
+
+    if (herramientas.length === 0) {
+        toolsLista.innerHTML = `<div class="no-data muted">No hay herramientas registradas.</div>`;
+        return;
+    }
+
+    toolsLista.innerHTML = herramientas.map((h, idx) => {
+
+        const categoriaNombre = h.categoria
+            ? h.categoria.nombre
+            : "Sin categoría";
+
+        return `
+        <div class="tool-item" data-index="${idx}">
+            <div class="tool-meta">
+                <div class="tool-name">${escapeHtml(h.nombre)}</div>
+                <a class="tool-link" href="${escapeAttr(h.link)}" target="_blank" rel="noopener noreferrer">
+                    ${shortText(h.link, 48)}
+                </a>
+                <div class="tool-cat">${escapeHtml(categoriaNombre)}</div>
+            </div>
+
+            <div class="tool-actions">
+                <button class="btn-open-tool" data-action="open" data-index="${idx}" title="Abrir">Abrir</button>
+                <button class="btn-delete-tool" data-action="delete" data-index="${idx}" title="Eliminar">Eliminar</button>
+            </div>
+        </div>
+        `;
+    }).join('');
+
+    toolsLista.querySelectorAll('.btn-delete-tool').forEach(btn => {
+      btn.addEventListener('click', () => {
+        eliminarHerramienta(btn.dataset.index);
+      });
+    });
+
+    toolsLista.querySelectorAll('.btn-open-tool').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const h = herramientas[btn.dataset.index];
+        if (h?.link) window.open(h.link, '_blank', 'noopener');
+      });
+    });
+  }
+
+  async function eliminarHerramienta(index) {
+    const item = herramientas[index];
+    if (!item) return;
+
+    const ok = confirm(`¿Eliminar la herramienta "${item.nombre}"?`);
+    if (!ok) return;
+
+    try {
+      await fetch(`/herramientas/${item.id_herramienta}`, {
+        method: 'DELETE',
+        headers: { 'X-CSRF-TOKEN': csrfToken }
+      });
+
+      herramientas.splice(index, 1);
+      renderHerramientas();
+      await cargarSidebars();
+
+    } catch (err) {
+      console.error('Error eliminando herramienta:', err);
+      alert('Error eliminando herramienta.');
+    }
+  }
+  document.querySelectorAll('.categoria-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+          const catId = btn.dataset.cat;
+          const contenedor = document.getElementById(`cat-${catId}`);
+          contenedor.classList.toggle('hidden');
+      });
+  });
+
+  document.querySelectorAll('.sidebar-subitem').forEach(btn => {
+      btn.addEventListener('click', () => {
+          const url = btn.dataset.url;
+          if (url) window.open(url, '_blank');
+      });
+  });
+
+  function escapeHtml(s) {
+    s = String(s || '');
+    return s.replace(/[&<>"']/g, m => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    })[m]);
+  }
+
+  function escapeAttr(s) {
+    s = String(s || '');
+    return escapeHtml(s).replace(/"/g, '&quot;');
+  }
+
+  function shortText(text, max = 40) {
+    text = String(text || '');
+    return text.length > max ? text.slice(0, max - 3) + '...' : text;
+  }
   // ==========================================
   // 5. RENDER
   // ==========================================

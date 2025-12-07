@@ -3,51 +3,59 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-// Importamos los controladores aquí arriba para mantener las rutas limpias
+// Importamos los controladores que ya estaban
 use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\UserController;
-use App\Http\Controllers\AlexaController;
+// Importamos el controlador de Alexa/API
+use App\Http\Controllers\Api\ApiController; 
+// Importamos los controladores del Consultor
+use App\Http\Controllers\Api\Consultor;
 
 /*
 |--------------------------------------------------------------------------
-| API Routes
+| API Routes (Archivo Unificado)
 |--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| is assigned the "api" middleware group. Enjoy building your API!
-|
 */
 
 // ----------------------------------------------------------------------
-// 1. Rutas de autenticación (Públicas)
+// 1. Rutas de autenticación (Públicas) - (DEL ORIGINAL)
 // ----------------------------------------------------------------------
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout']);
 Route::post('/verify', [AuthController::class, 'verify']);
 
+
+// =====================================================================
+// === RUTAS PÚBLICAS PARA SERVICIOS EXTERNOS (ALEXA / LAMBDA) - (TUS CAMBIOS) ===
+// =====================================================================
+
+// [GET] /api/casos/estado/{caso_id}
+Route::get('/casos/estado/{caso_id}', [ApiController::class, 'getEstadoCaso']);
+
+// [GET] /api/casos/investigadores/{caso_id}
+Route::get('/casos/investigadores/{caso_id}', [ApiController::class, 'getInvestigadoresCaso']);
+
+// [NUEVA RUTA] /api/casos/info/nombre/{nombre} - ESTA ES LA CLAVE PARA ALEXA
+Route::get('/casos/info/nombre/{nombre}', [ApiController::class, 'getCaseInfoByName']); 
+
+
 // ----------------------------------------------------------------------
-// 2. Rutas protegidas por Token (API)
+// 2. Rutas protegidas por Token (API) - (DEL ORIGINAL Y TU USER)
 // ----------------------------------------------------------------------
 Route::middleware('auth:api')->get('/user', [UserController::class, 'show']);
 
 // ----------------------------------------------------------------------
-// 3. Rutas del Panel de Administración (Middleware WEB)
+// 3. Rutas del Panel de Administración (Middleware WEB) - (DEL ORIGINAL)
 // ----------------------------------------------------------------------
-// Nota: Usas el middleware 'web' aquí. Esto habilitará sesiones y protección CSRF.
-// Asegúrate de que esto es lo que quieres en un archivo api.php.
-
 Route::middleware(['web'])->group(function () {
     // Dashboard principal
     Route::get('/admin/dashboard', [AdminDashboardController::class, 'index']);
-});
-// Rutas protegidas
-Route::middleware('auth:api')->get('/user', [App\Http\Controllers\Api\UserController::class, 'show']);
-// Ruta para el dashboard del administrador
-Route::middleware(['web'])->get('/admin/dashboard', [AdminDashboardController::class, 'index']);
+    
+    // Rutas protegidas
+    Route::get('/admin/dashboard', [AdminDashboardController::class, 'index']);
 
-Route::middleware(['web'])->group(function () {
+    // Rutas del panel de administración
     Route::get('/admin/casos', [AdminDashboardController::class, 'getAllCases']);
     Route::get('/admin/capturistas', [AdminDashboardController::class, 'getCapturistas']);
     Route::get('/admin/usuarios', [AdminDashboardController::class, 'getAllUsers']);
@@ -60,7 +68,9 @@ Route::middleware(['web'])->group(function () {
     Route::delete('/admin/casos/{id}', [AdminDashboardController::class, 'deleteCaso']);
 });
 
-//Rutas para el modulo Consultor
+// ----------------------------------------------------------------------
+// 4. Rutas para el modulo Consultor - (DEL ORIGINAL)
+// ----------------------------------------------------------------------
 Route::middleware(['auth:api'])->prefix('consultor')->group(function () {
 
     // ---------- USUARIOS ----------
@@ -88,7 +98,7 @@ Route::middleware(['auth:api'])->prefix('consultor')->group(function () {
 });
 
 // =======================
-// RUTAS ACCIONES / HISTORIAL
+// RUTAS ACCIONES / HISTORIAL y PLATAFORMAS (DEL ORIGINAL - Refactorizadas)
 // =======================
 
 Route::prefix('consultor')->group(function () {
@@ -100,12 +110,7 @@ Route::prefix('consultor')->group(function () {
     // Historial de un caso
     Route::get('/casos/{id}/historial', 
         [App\Http\Controllers\Api\Consultor\AccionesController::class, 'historialCaso']);
-});
-// =======================
-// RUTAS PLATAFORMAS
-// =======================
-Route::prefix('consultor')->group(function () {
-
+    
     // Plataformas de un usuario
     Route::get('/usuarios/{id}/plataformas',
         [App\Http\Controllers\Api\Consultor\PlataformasController::class, 'plataformasUsuario']);
@@ -114,4 +119,3 @@ Route::prefix('consultor')->group(function () {
     Route::get('/plataformas',
         [App\Http\Controllers\Api\Consultor\PlataformasController::class, 'todasPlataformas']);
 });
-

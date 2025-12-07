@@ -1,17 +1,13 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use App\CategoriaHerramienta;
 
 class CategoriasHerramientasSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
     public function run()
     {
-        DB::table('categorias_herramientas')->insert([
+        $categorias = [
             ['nombre' => 'Búsqueda de Personas'],
             ['nombre' => 'Análisis de Redes Sociales'],
             ['nombre' => 'Geolocalización'],
@@ -22,6 +18,10 @@ class CategoriasHerramientasSeeder extends Seeder
             ['nombre' => 'Análisis de Comunicaciones'],
             ['nombre' => 'Verificación de Identidad'],
             ['nombre' => 'Análisis Forense Digital']
-        ]);
+        ];
+
+        foreach ($categorias as $cat) {
+            CategoriaHerramienta::firstOrCreate(['nombre' => $cat['nombre']]);
+        }
     }
 }
