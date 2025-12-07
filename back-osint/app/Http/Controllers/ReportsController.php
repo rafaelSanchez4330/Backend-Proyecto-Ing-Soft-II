@@ -84,7 +84,8 @@ class ReportsController extends Controller
             ->get();
 
         // Generate Obsidian markdown
-        $markdown = "# Caso #{$caso->id_caso}: {$caso->codigo_caso}\n\n";
+        $codigoCaso = $caso->codigo_caso ?? 'UPSLP-' . str_pad($caso->id_caso, 3, '0', STR_PAD_LEFT);
+        $markdown = "# Caso #{$caso->id_caso}: {$codigoCaso}\n\n";
         $markdown .= "## Información General\n\n";
         $markdown .= "- **Estado**: {$caso->estado}\n";
         $markdown .= "- **Descripción**: {$caso->descripcion}\n";
@@ -110,6 +111,6 @@ class ReportsController extends Controller
 
         return response($markdown)
             ->header('Content-Type', 'text/markdown')
-            ->header('Content-Disposition', 'attachment; filename="caso-' . $caso->codigo_caso . '.md"');
+            ->header('Content-Disposition', 'attachment; filename="caso-' . $codigoCaso . '.md"');
     }
 }

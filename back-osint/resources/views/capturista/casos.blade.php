@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="csrf-token" content="{{ csrf_token() }}">
-  <title>Mis Casos - UDINIT</title>
+  <title>Mis Casos - UDINT</title>
 
   <!-- CSS -->
   <link rel="stylesheet" href="{{ asset('assets/dashboard/index.css') }}" />
@@ -58,7 +58,7 @@
             </div>
             <footer class="caso-footer">
               <span>CASE ID:</span>
-              <span class="caso-codigo">{{ $caso->codigo_caso ?? 'N/A' }}</span>
+              <span class="caso-codigo">{{ $caso->codigo_caso ?? 'UPSLP-' . str_pad($caso->id_caso, 3, '0', STR_PAD_LEFT) }}</span>
             </footer>
           </article>
         </a>

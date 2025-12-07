@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reporte - Caso #{{ $caso->codigo_caso ?? $caso->id_caso }}</title>
+    <title>Reporte - Caso #{{ $caso->codigo_caso ?? 'UPSLP-' . str_pad($caso->id_caso, 3, '0', STR_PAD_LEFT) }}</title>
     <style>
         @media print {
             @page {
@@ -268,7 +268,7 @@
 
     <div class="header">
         <h1>📋 Reporte del Caso</h1>
-        <div class="subtitle">Caso #{{ $caso->codigo_caso ?? $caso->id_caso }}</div>
+        <div class="subtitle">Caso #{{ $caso->codigo_caso ?? 'UPSLP-' . str_pad($caso->id_caso, 3, '0', STR_PAD_LEFT) }}</div>
     </div>
 
     <!-- Información General -->
@@ -277,7 +277,7 @@
         <div class="info-grid">
             <div class="info-item">
                 <div class="info-label">Código del Caso</div>
-                <div class="info-value">{{ $caso->codigo_caso ?? 'N/A' }}</div>
+                <div class="info-value">{{ $caso->codigo_caso ?? 'UPSLP-' . str_pad($caso->id_caso, 3, '0', STR_PAD_LEFT) }}</div>
             </div>
             <div class="info-item">
                 <div class="info-label">Estado</div>
@@ -368,7 +368,7 @@
 
     <div class="footer no-print">
         <p>Generado el {{ \Carbon\Carbon::now()->format('d/m/Y H:i') }}</p>
-        <p>Sistema UDINIT - Case Management</p>
+        <p>Sistema UDINT - Case Management</p>
     </div>
 </body>
 

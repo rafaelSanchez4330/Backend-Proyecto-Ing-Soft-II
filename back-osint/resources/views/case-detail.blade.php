@@ -5,7 +5,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Caso #{{ $caso->codigo_caso ?? $caso->id_caso }} - UDINIT</title>
+    <title>Caso #{{ $caso->codigo_caso ?? 'UPSLP-' . str_pad($caso->id_caso, 3, '0', STR_PAD_LEFT) }} - UDINT</title>
 
     <!-- CSS -->
     <link rel="stylesheet" href="{{ asset('assets/dashboard/index.css') }}" />
@@ -286,7 +286,7 @@
 
 <body>
     <nav class="navbar">
-        <h1 class="page-title">📋 Caso #{{ $caso->codigo_caso ?? $caso->id_caso }}</h1>
+        <h1 class="page-title">📋 Caso #{{ $caso->codigo_caso ?? 'UPSLP-' . str_pad($caso->id_caso, 3, '0', STR_PAD_LEFT) }}</h1>
         <div class="nav-buttons">
             <button class="btn-nav btn-obsidian"
                 onclick="window.location.href='{{ route('reports.obsidian', $caso->id_caso) }}';">
@@ -307,7 +307,7 @@
             <div class="info-grid">
                 <div class="info-item">
                     <div class="info-label">Código del Caso</div>
-                    <div class="info-value">{{ $caso->codigo_caso ?? 'N/A' }}</div>
+                    <div class="info-value">{{ $caso->codigo_caso ?? 'UPSLP-' . str_pad($caso->id_caso, 3, '0', STR_PAD_LEFT) }}</div>
                 </div>
                 <div class="info-item">
                     <div class="info-label">Estado</div>

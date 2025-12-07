@@ -116,4 +116,10 @@ Route::middleware(['auth'])->group(function () {
 
     });
 
+    // Logging for Dashboard
+    Route::post('/dashboard/log-activity', [App\Http\Controllers\AdminDashboardController::class, 'logFromFrontend']);
+
+    // About Us
+    Route::get('/acerca-de', [App\Http\Controllers\DashboardController::class, 'about'])->name('about');
+
 });

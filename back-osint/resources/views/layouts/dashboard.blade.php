@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="csrf-token" content="{{ csrf_token() }}">
-  <title>UDINIT Dashboard</title>
+  <title>UDINT Dashboard</title>
 
   <!-- CSS global y de componentes -->
   <link rel="stylesheet" href="{{ asset('assets/dashboard/index.css') }}" />
@@ -21,7 +21,7 @@
       <div class="navbar-left">
         <div class="navbar-logo">
           <span class="navbar-logo-mark">U</span>
-          <span class="navbar-logo-text">UDINIT</span>
+          <span class="navbar-logo-text">UDINT</span>
         </div>
 
         <div class="navbar-search">
@@ -120,28 +120,22 @@
 
           <div class="sidebar-content">
             <div class="sidebar-header">
-              <div class="sidebar-title">UDINIT</div>
+              <div class="sidebar-title">UDINT</div>
             </div>
 
-            <nav class="sidebar-menu" aria-label="Categorías de herramientas">
-              @foreach($categorias->sortBy('nombre') as $categoria)
-                  <div class="sidebar-category">
-                      <button class="sidebar-item categoria-btn" type="button" data-cat="{{ $categoria->id_categoria }}">
-                          {{ $categoria->nombre }}
-                      </button>
-
-                      <div class="categoria-tools hidden" id="cat-{{ $categoria->id_categoria }}">
-                          @foreach($herramientas->where('id_categoria', $categoria->id_categoria) as $tool)
-                              <button class="sidebar-subitem" 
-                                  type="button"
-                                  data-url="{{ $tool->link }}">
-                                  {{ $tool->nombre }}
-                              </button>
-                          @endforeach
-                      </div>
-                  </div>
-              @endforeach
-
+            <nav class="sidebar-menu">
+              <button class="sidebar-item" type="button" 
+                onclick="window.open('https://chatgpt.com/g/g-692e71b1700c81919853137b08b627fe-agente-udint-v1-0', '_blank'); logActivity('clic_boton', 'Usuario abrió Bot de ChatGPT');">
+                  Bot de ChatGPT
+              </button>
+              <button class="sidebar-item" type="button" 
+                onclick="window.open('https://t.me/UDINIT_Bot', '_blank'); logActivity('clic_boton', 'Usuario abrió Bot de Telegram');">
+                  Bot de Telegram
+              </button>
+              <a href="{{ route('about') }}" class="sidebar-item" style="text-decoration: none; color: inherit; display: block; padding: 10px 15px;"
+                onclick="logActivity('clic_boton', 'Usuario vio Acerca de nosotros');">
+                  Acerca de nosotros
+              </a>
             </nav>
           </div>
       </aside>
@@ -163,19 +157,41 @@
                 <div class="sidebar-header">
                     <div class="sidebar-title">TOOLS</div>
                 </div>
-                <nav class="sidebar-menu" aria-label="Herramientas sin categoría">
+                <nav class="sidebar-menu" aria-label="Herramientas por categoría">
+                  @foreach($categorias->sortBy('nombre') as $categoria)
+                      <div class="sidebar-category-header" style="color: white; padding: 10px 15px; font-weight: bold; text-transform: uppercase; font-size: 0.85rem; border-bottom: 1px solid rgba(255,255,255,0.1);">
+                          {{ $categoria->nombre }}
+                      </div>
+                      
+                      @foreach($herramientas->where('id_categoria', $categoria->id_categoria) as $tool)
+                          <button class="sidebar-item" type="button"
+                              onclick="window.open('{{ $tool->link }}', '_blank')">
+                              {{ $tool->nombre }}
+                          </button>
+                      @endforeach
+                  @endforeach
+
+                  <!-- Herramientas sin categoría -->
+                  @if($herramientas->where('id_categoria', null)->count() > 0)
+                      <div class="sidebar-category-header" style="color: white; padding: 10px 15px; font-weight: bold; text-transform: uppercase; font-size: 0.85rem; border-bottom: 1px solid rgba(255,255,255,0.1);">
+                          Otros
+                      </div>
+                      @foreach($herramientas->where('id_categoria', null) as $tool)
+                          <button class="sidebar-item" type="button"
+                              onclick="window.open('{{ $tool->link }}', '_blank')">
+                              {{ $tool->nombre }}
+                          </button>
+                      @endforeach
+                  @endif
+
+                  <!-- Agente de IA (Hardcoded or managed differently) -->
+                   <div class="sidebar-category-header" style="color: white; padding: 10px 15px; font-weight: bold; text-transform: uppercase; font-size: 0.85rem; border-bottom: 1px solid rgba(255,255,255,0.1);">
+                          IA Tools
+                  </div>
                   <button class="sidebar-item" type="button"
                       onclick="window.open('https://chatgpt.com/g/g-692e71b1700c81919853137b08b627fe-agente-udint-v1-0', '_blank')">
                       Agente de IA
                   </button>
-
-                  @foreach($herramientas->where('id_categoria', null) as $tool)
-                      <button class="sidebar-item" type="button"
-                          onclick="window.open('{{ $tool->link }}', '_blank')">
-                          {{ $tool->nombre }}
-                      </button>
-                  @endforeach
-
               </nav>
             </div>
         </aside>

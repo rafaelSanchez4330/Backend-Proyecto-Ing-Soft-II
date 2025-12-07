@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="csrf-token" content="{{ csrf_token() }}">
-  <title>Caso {{ $caso->codigo_caso ?? $caso->id }} - UDINIT</title>
+  <title>Caso {{ $caso->codigo_caso ?? 'UPSLP-' . str_pad($caso->id_caso, 3, '0', STR_PAD_LEFT) }} - UDINT</title>
 
   <!-- CSS -->
   <link rel="stylesheet" href="{{ asset('assets/dashboard/index.css') }}" />
@@ -29,7 +29,7 @@
     <div class="caso-detalle">
       <div class="caso-detalle-header">
         <div class="caso-detalle-info">
-          <h2>Caso: {{ $caso->codigo_caso ?? 'N/A' }}</h2>
+          <h2>Caso: {{ $caso->codigo_caso ?? 'UPSLP-' . str_pad($caso->id_caso, 3, '0', STR_PAD_LEFT) }}</h2>
           <div class="caso-detalle-meta">
             <div class="caso-meta-item">
               <span class="caso-meta-label">Estado</span>
@@ -194,7 +194,7 @@
     // Pasar datos del caso a JavaScript
     window.casoData = {
       id_caso: '{{ $caso->id_caso }}',
-      codigo: '{{ $caso->codigo_caso ?? 'N/A' }}'
+      codigo: '{{ $caso->codigo_caso ?? 'UPSLP-' . str_pad($caso->id_caso, 3, '0', STR_PAD_LEFT) }}'
     };
   </script>
   <script src="{{ asset('assets/dashboard/services/capturista-api.js') }}"></script>

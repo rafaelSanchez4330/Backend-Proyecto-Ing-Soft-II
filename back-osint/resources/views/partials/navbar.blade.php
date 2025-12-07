@@ -3,7 +3,7 @@
     <div class="navbar-left">
       <div class="navbar-logo">
         <span class="navbar-logo-mark">U</span>
-        <span class="navbar-logo-text">UDINIT</span>
+        <span class="navbar-logo-text">UDINT</span>
       </div>
 
       <div class="navbar-search">

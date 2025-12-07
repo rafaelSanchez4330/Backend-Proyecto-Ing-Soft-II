@@ -8,6 +8,8 @@ use App\Herramienta;
 use App\CategoriaHerramienta;
 use Illuminate\Support\Facades\Auth;
 
+use App\LogActividad;
+
 class DashboardController extends Controller
 {
     public function index()
@@ -16,7 +18,15 @@ class DashboardController extends Controller
         $herramientas = Herramienta::all();
         $categorias = CategoriaHerramienta::all();
         $user = Auth::user();
+        $ultimasActividades = LogActividad::with('usuario')->latest('fecha_hora')->take(5)->get();
 
-        return view('dashboard', compact('casos', 'herramientas', 'categorias', 'user'));
+        return view('dashboard', compact('casos', 'herramientas', 'categorias', 'user', 'ultimasActividades'));
+    }
+
+    public function about()
+    {
+        $herramientas = Herramienta::all();
+        $categorias = CategoriaHerramienta::all();
+        return view('about', compact('herramientas', 'categorias'));
     }
 }

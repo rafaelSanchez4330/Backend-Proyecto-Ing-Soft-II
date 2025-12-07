@@ -27,7 +27,8 @@ class AdminDashboardController extends Controller
         $totalCasos = Caso::count();
 
         // 4. Herramientas
-        $herramientas = Herramienta::select('id_herramienta', 'nombre', 'enlace')
+        $herramientas = Herramienta::with('categoria')
+                                   ->select('id_herramienta', 'nombre', 'link', 'id_categoria')
                                    ->orderBy('nombre', 'asc')
                                    ->get();
 
@@ -156,6 +157,7 @@ class AdminDashboardController extends Controller
         try {
             $request->validate([
                 'nombre' => 'required|string|max:255',
+                'usuario' => 'required|string|max:50|unique:usuarios,usuario',
                 'email' => 'required|email|unique:usuarios,mail',
                 'password' => 'required|string|min:6',
                 'rol' => 'required|string',
@@ -165,7 +167,7 @@ class AdminDashboardController extends Controller
             $usuario = new Usuario();
             $usuario->nombre = $request->nombre;
             $usuario->mail = $request->email;
-            $usuario->usuario = $request->email; // Map email to usuario field
+            $usuario->usuario = $request->usuario; // Correctly map usuario field
             $usuario->contrasena = bcrypt($request->password); // Use contrasena instead of password
             $usuario->rol = $request->rol;
             $usuario->activo = 1; // Default to active
@@ -231,6 +233,7 @@ class AdminDashboardController extends Controller
 
             $request->validate([
                 'nombre' => 'required|string|max:255',
+                'usuario' => 'required|string|max:50|unique:usuarios,usuario,' . $id . ',id_usuario',
                 'email' => 'required|email|unique:usuarios,mail,' . $id . ',id_usuario',
                 'rol' => 'required|string',
                 // 'celular' => 'nullable|string'
@@ -238,7 +241,7 @@ class AdminDashboardController extends Controller
 
             $usuario->nombre = $request->nombre;
             $usuario->mail = $request->email;
-            $usuario->usuario = $request->email;
+            $usuario->usuario = $request->usuario;
             $usuario->rol = $request->rol;
             // $usuario->celular = $request->celular;
             
@@ -311,6 +314,22 @@ class AdminDashboardController extends Controller
                 'success' => false,
                 'message' => 'Error al eliminar caso: ' . $e->getMessage()
             ], 500);
+        }
+    }
+
+    public function logFromFrontend(Request $request)
+    {
+        try {
+            $request->validate([
+                'accion' => 'required|string',
+                'descripcion' => 'required|string'
+            ]);
+
+            $this->registrarLog($request->accion, $request->descripcion);
+
+            return response()->json(['success' => true]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'error' => $e->getMessage()], 500);
         }
     }
 }

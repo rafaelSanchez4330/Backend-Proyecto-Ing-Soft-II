@@ -46,6 +46,7 @@
   <!-- PANEL DE CONTROL -->
   <section class="panel-control" aria-label="Panel de control">
     <div class="panel-card">
+      @if(Auth::user()->rol !== 'capturista')
       <button class="panel-item" type="button" id="btnAdmin">
         <span class="panel-icono">
           <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -55,6 +56,8 @@
         </span>
         <span>Admin</span>
       </button>
+      @endif
+
 
       @if(Auth::user()->rol === 'capturista')
         <a href="{{ route('capturista.casos') }}" class="panel-item" style="text-decoration: none; color: white;">
@@ -67,6 +70,7 @@
         </a>
       @endif
 
+      @if(Auth::user()->rol !== 'capturista')
       <button class="panel-item" type="button" id="btnNewCase">
         <span class="panel-icono plus">
           <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -85,6 +89,7 @@
         </span>
         <span>New user</span>
       </button>
+      @endif
 
       @if(Auth::user()->rol === 'capturista')
         <a href="{{ route('capturista.todas-evidencias') }}" class="panel-item"
@@ -97,16 +102,6 @@
           </span>
           <span>Evidence</span>
         </a>
-      @else
-        <button class="panel-item" type="button">
-          <span class="panel-icono panel-icono-evidence">
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path
-                d="M10 2a6 6 0 0 1 4.8 9.6l4.8 4.8-1.4 1.4-4.8-4.8A6 6 0 1 1 10 2Zm0 2a4 4 0 1 0 4 4 4.005 4.005 0 0 0-4-4Z" />
-            </svg>
-          </span>
-          <span>Evidence</span>
-        </button>
       @endif
 
 
@@ -119,7 +114,8 @@
         <span>Reports</span>
       </a>
 
-      <button class="panel-item" type="button">
+      @if(Auth::user()->rol !== 'capturista')
+      <button class="panel-item" type="button" id="btnTools">
         <span class="panel-icono panel-icono-tools">
           <svg viewBox="0 0 24 24" aria-hidden="true">
             <path
@@ -128,6 +124,7 @@
         </span>
         <span>Tools</span>
       </button>
+      @endif
     </div>
   </section>
 
@@ -159,11 +156,28 @@
         </div>
       </div>
 
-      <div class="usuario-bottom">
-        <span>New Tool: </span>
-        <a href="https://haveibeenpwned.com/" target="_blank" rel="noopener noreferrer">
-          https://haveibeenpwned.com/
-        </a>
+      <div class="usuario-bottom" style="flex-direction: column; align-items: flex-start; gap: 4px; padding: 10px;">
+        @if(in_array(Auth::user()->rol, ['administrador', 'admin']))
+            <span style="font-weight: bold; margin-bottom: 2px;">Últimas actividades:</span>
+            @if(isset($ultimasActividades) && count($ultimasActividades) > 0)
+                @foreach($ultimasActividades as $actividad)
+                    <div style="font-size: 0.85em; color: #a0aec0; display: flex; align-items: center; width: 100%;">
+                        <span style="margin-right: 5px; color: #cbd5e0;">&bull;</span>
+                        <span>{{ $actividad->usuario->nombre ?? 'Sistema' }}</span>
+                        <span style="margin: 0 4px;">-</span>
+                        <span>{{ $actividad->descripcion }}</span>
+                        <span style="font-size: 0.9em; color: #718096; margin-left: auto; padding-left: 10px;">
+                            ({{ \Carbon\Carbon::parse($actividad->fecha_hora)->diffForHumans() }})
+                        </span>
+                    </div>
+                @endforeach
+            @else
+                <span style="color: #a0aec0; margin-left: 5px;">Sin actividad reciente</span>
+            @endif
+        @else
+             <!-- Contenido para otros roles -->
+             <span>Bienvenido, {{ Auth::user()->nombre }}</span>
+        @endif
       </div>
     </div>
   </section>
@@ -443,8 +457,18 @@
         </div>
 
         <div class="campo modal-body-full">
+          <label for="editUsuarioUsuario">Nombre de usuario</label>
+          <input type="text" id="editUsuarioUsuario" placeholder="Ej: juan.perez" />
+        </div>
+
+        <div class="campo modal-body-full">
           <label for="editEmailUsuario">Correo electrónico</label>
           <input type="email" id="editEmailUsuario" placeholder="usuario@osint.com" />
+        </div>
+
+        <div class="campo modal-body-full">
+          <label for="editPasswordUsuario">Contraseña (dejar en blanco para mantener actual)</label>
+          <input type="password" id="editPasswordUsuario" placeholder="******" />
         </div>
 
         <div class="campo">
@@ -462,7 +486,7 @@
       </div>
     </div>
   </div>
-@endsection
+
   <!-- MODAL NUEVO CASO -->
   <div class="modal-overlay" id="modalNuevoCaso" style="z-index: 1100;">
     <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalNuevoCasoTitulo">
@@ -516,6 +540,11 @@
         <div class="campo modal-body-full">
           <label for="nuevoNombreUsuario">Nombre completo</label>
           <input type="text" id="nuevoNombreUsuario" placeholder="Ej: Ana López" />
+        </div>
+
+        <div class="campo modal-body-full">
+          <label for="nuevoUsuarioUsuario">Nombre de usuario</label>
+          <input type="text" id="nuevoUsuarioUsuario" placeholder="Ej: ana.lopez" />
         </div>
 
         <div class="campo modal-body-full">

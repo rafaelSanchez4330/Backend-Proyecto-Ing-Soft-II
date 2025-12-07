@@ -5,7 +5,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Reports - UDINIT</title>
+    <title>Reports - UDINT</title>
 
     <!-- CSS -->
     <link rel="stylesheet" href="{{ asset('assets/dashboard/index.css') }}" />
@@ -169,7 +169,7 @@
             <div class="navbar-left">
                 <div class="navbar-logo">
                     <span class="navbar-logo-mark">U</span>
-                    <span class="navbar-logo-text">UDINIT</span>
+                    <span class="navbar-logo-text">UDINT</span>
                 </div>
             </div>
 
@@ -246,7 +246,7 @@
                     @forelse($casos as $caso)
                         <tr data-status="{{ $caso->estado }}"
                             onclick="window.location.href='{{ route('reports.show', $caso->id_caso) }}';">
-                            <td><span class="case-code">{{ $caso->codigo_caso ?? 'N/A' }}</span></td>
+                            <td><span class="case-code">{{ $caso->codigo_caso ?? 'UPSLP-' . str_pad($caso->id_caso, 3, '0', STR_PAD_LEFT) }}</span></td>
                             <td>
                                 <span class="status-badge status-{{ str_replace(' ', '_', strtolower($caso->estado)) }}">
                                     <span class="status-dot"></span>

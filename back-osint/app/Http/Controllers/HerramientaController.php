@@ -42,18 +42,35 @@ class HerramientaController extends Controller
             $categoria_id = $request->categoria;
         }
 
-        $herramienta = Herramienta::create([
+        $herramientas = Herramienta::create([
             'nombre' => $request->nombre,
             'link' => $request->link,
             'id_categoria' => $categoria_id
         ]);
 
-        return response()->json($herramienta, 201);
+        $this->registrarLog('agregar_herramienta', "Nueva herramienta '{$herramientas->nombre}' agregada");
+
+        return response()->json($herramientas, 201);
     }
 
     public function destroy($id)
     {
         Herramienta::where('id_herramienta', $id)->delete();
         return response()->json(['ok' => true]);
+    }
+
+    private function registrarLog($tipo_accion, $descripcion, $caso_id = null)
+    {
+        try {
+            $log = new \App\LogActividad();
+            $log->id_usuario = auth()->user() ? auth()->user()->id_usuario : null;
+            $log->tipo_accion = $tipo_accion;
+            $log->descripcion = $descripcion;
+            $log->caso_id_relacionado = $caso_id;
+            $log->fecha_hora = now();
+            $log->save();
+        } catch (\Exception $e) {
+            \Log::error("Error registrando log: " . $e->getMessage());
+        }
     }
 }

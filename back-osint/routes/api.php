@@ -58,6 +58,8 @@ Route::middleware(['web'])->group(function () {
     // Rutas del panel de administración
     Route::get('/admin/casos', [AdminDashboardController::class, 'getAllCases']);
     Route::get('/admin/capturistas', [AdminDashboardController::class, 'getCapturistas']);
+    Route::get('/admin/casos', [AdminDashboardController::class, 'getAllCases']);
+    Route::get('/admin/capturistas', [AdminDashboardController::class, 'getCapturistas']);
     Route::get('/admin/usuarios', [AdminDashboardController::class, 'getAllUsers']);
     Route::post('/admin/usuarios', [AdminDashboardController::class, 'storeUsuario']);
     Route::post('/admin/casos', [AdminDashboardController::class, 'storeCaso']);

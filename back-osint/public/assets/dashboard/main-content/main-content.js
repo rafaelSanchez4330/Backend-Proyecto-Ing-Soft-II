@@ -28,10 +28,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const modalNuevoUsuario = document.getElementById('modalNuevoUsuario');
   const modalEvidencias = document.getElementById('modalEvidencias');
   const modalReporte = document.getElementById('modalReporte');
-  const modalAdmin = document.getElementById('modalAdmin'); 
+  const modalAdmin = document.getElementById('modalAdmin');
   const modalTools = document.getElementById('modalTools');
   const modalGestionCasos = document.getElementById('modalGestionCasos');
-      
+
   // Campos modal Tools
   const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
   const formAgregarTool = document.getElementById('formAgregarTool');
@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const toolCategoria = document.getElementById('toolCategoria');
   const categoriaNuevaGroup = document.getElementById('categoriaNuevaGroup');
   const categoriaNueva = document.getElementById('categoriaNueva');
-    
+
   // Botones dentro de modales
   const btnNuevoCasoDesdeGestion = document.getElementById('btnNuevoCasoDesdeGestion');
   const btnCrearCaso = document.getElementById('btnCrearCaso');
@@ -90,21 +90,96 @@ document.addEventListener('DOMContentLoaded', () => {
 
         renderCasos();
 
-        // Renderizar herramientas en sidebar derecho
+        // Renderizar herramientas en sidebar derecho (agrupadas)
         if (datos.lista_herramientas && Array.isArray(datos.lista_herramientas)) {
           const sidebarMenu = document.querySelector('#sidebarDerecha .sidebar-menu');
           if (sidebarMenu) {
             sidebarMenu.innerHTML = ''; // Limpiar contenido previo
+
+            // 1. Agrupar herramientas
+            const toolsByCat = {};
+            const noCatTools = [];
+
             datos.lista_herramientas.forEach(tool => {
-              const btn = document.createElement('button');
-              btn.className = 'sidebar-item';
-              btn.type = 'button';
-              btn.textContent = tool.nombre;
-              btn.addEventListener('click', () => {
-                if (tool.enlace) window.open(tool.enlace, '_blank');
-              });
-              sidebarMenu.appendChild(btn);
+              console.log("Processing tool:", tool.nombre, "Category:", tool.categoria); // DEBUG
+              if (tool.categoria && tool.categoria.nombre) {
+                const catName = tool.categoria.nombre;
+                if (!toolsByCat[catName]) {
+                  toolsByCat[catName] = [];
+                }
+                toolsByCat[catName].push(tool);
+              } else {
+                noCatTools.push(tool);
+              }
             });
+
+            // 2. Renderizar Categorías y sus herramientas
+            // Ordenar categorías alfabéticamente
+            Object.keys(toolsByCat).sort().forEach(catName => {
+              // Header de Categoría
+              const header = document.createElement('div');
+              header.className = 'sidebar-category-header';
+              // Reduced font-size from 0.85rem to 0.7rem
+              header.style.cssText = 'color: white; padding: 10px 15px; font-weight: bold; text-transform: uppercase; font-size: 0.7rem; border-bottom: 1px solid rgba(255,255,255,0.1); letter-spacing: 0.5px;';
+              header.textContent = catName;
+              sidebarMenu.appendChild(header);
+
+              // Tools de esta categoría
+              toolsByCat[catName].forEach(tool => {
+                const btn = document.createElement('button');
+                btn.className = 'sidebar-item';
+                btn.type = 'button';
+                btn.textContent = tool.nombre;
+
+                // Italics if link exists
+                if (tool.link) {
+                  btn.style.fontStyle = 'italic';
+                  // Optional: add a small icon or visual cue? The user just asked for italics.
+                }
+
+                btn.addEventListener('click', () => {
+                  if (tool.link) window.open(tool.link, '_blank');
+                });
+                sidebarMenu.appendChild(btn);
+              });
+            });
+
+            // 3. Renderizar herramientas sin categoría (Otros)
+            if (noCatTools.length > 0) {
+              const header = document.createElement('div');
+              header.className = 'sidebar-category-header';
+              header.style.cssText = 'color: white; padding: 10px 15px; font-weight: bold; text-transform: uppercase; font-size: 0.85rem; border-bottom: 1px solid rgba(255,255,255,0.1);';
+              header.textContent = 'Otros';
+              sidebarMenu.appendChild(header);
+
+              noCatTools.forEach(tool => {
+                const btn = document.createElement('button');
+                btn.className = 'sidebar-item';
+                btn.type = 'button';
+                btn.textContent = tool.nombre;
+                btn.addEventListener('click', () => {
+                  if (tool.link) window.open(tool.link, '_blank');
+                });
+                sidebarMenu.appendChild(btn);
+              });
+            }
+
+            // 4. Agregar Agente de IA al final (Hardcoded)
+            const iaHeader = document.createElement('div');
+            iaHeader.className = 'sidebar-category-header';
+            iaHeader.style.cssText = 'color: white; padding: 10px 15px; font-weight: bold; text-transform: uppercase; font-size: 0.85rem; border-bottom: 1px solid rgba(255,255,255,0.1);';
+            iaHeader.textContent = 'IA Tools';
+            sidebarMenu.appendChild(iaHeader);
+
+            const btnIA = document.createElement('button');
+            btnIA.className = 'sidebar-item';
+            btnIA.type = 'button';
+            btnIA.textContent = 'Agente de IA';
+            btnIA.addEventListener('click', () => {
+              window.open('https://chatgpt.com/g/g-692e71b1700c81919853137b08b627fe-agente-udint-v1-0', '_blank');
+            });
+            sidebarMenu.appendChild(btnIA);
+
           }
         }
       }
@@ -116,7 +191,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
   }
-    
+
   async function cargarCasosGestion() {
     try {
       const respuesta = await fetch('/api/admin/casos');
@@ -141,6 +216,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!respuesta.ok) throw new Error(`HTTP error! status: ${respuesta.status}`);
       const datos = await respuesta.json();
       if (datos.success) {
+        console.log("API Response Users:", datos.usuarios); // DEBUG: Inspect API response
         usuariosGestion = datos.usuarios;
         filtrarYRenderizarUsuarios();
       } else {
@@ -253,25 +329,49 @@ document.addEventListener('DOMContentLoaded', () => {
   // --- NUEVAS FUNCIONES PARA EDITAR/ELIMINAR USUARIOS ---
 
   function abrirModalEditarUsuario(id) {
+    console.log("Attempting to open edit modal for user ID:", id);
     const user = usuariosGestion.find(u => u.id_usuario == id);
-    if (!user) return;
+    if (!user) {
+      console.error("User not found in usuariosGestion for ID:", id);
+      return;
+    }
+    console.log("User found:", user);
 
     const modal = document.getElementById('modalEditarUsuario');
-    if (!modal) return;
+    if (!modal) {
+      console.error("Modal element 'modalEditarUsuario' not found in DOM");
+      return;
+    }
 
     // Populate fields
-    document.getElementById('editUserId').value = user.id_usuario;
-    document.getElementById('editNombreUsuario').value = user.nombre;
-    document.getElementById('editEmailUsuario').value = user.mail || user.email || '';
-    document.getElementById('editRolUsuario').value = user.rol;
-    document.getElementById('editPasswordUsuario').value = ''; // Reset password field
+    try {
+      console.log("Populating fields for user:", user); // DEBUG: Inspect user object
+      console.log("User username value:", user.usuario); // DEBUG: Inspect specific field
+      document.getElementById('editUserId').value = user.id_usuario;
+      document.getElementById('editNombreUsuario').value = user.nombre;
+      // Fallback to email if username is empty (for legacy users)
+      document.getElementById('editUsuarioUsuario').value = user.usuario || user.mail || user.email || '';
+      document.getElementById('editEmailUsuario').value = user.mail || user.email || '';
+      document.getElementById('editRolUsuario').value = user.rol;
 
-    abrirModal(modal);
+      const pwdField = document.getElementById('editPasswordUsuario');
+      if (pwdField) {
+        pwdField.value = ''; // Reset password field
+      } else {
+        console.error("CRITICAL: 'editPasswordUsuario' field missing!");
+      }
+
+      console.log("Fields populated. Opening modal...");
+      abrirModal(modal);
+    } catch (e) {
+      console.error("Error populating modal fields:", e);
+    }
   }
 
   async function guardarCambiosUsuario() {
     const id = document.getElementById('editUserId').value;
     const nombre = document.getElementById('editNombreUsuario').value.trim();
+    const usuario = document.getElementById('editUsuarioUsuario').value.trim();
     const email = document.getElementById('editEmailUsuario').value.trim();
     const rol = document.getElementById('editRolUsuario').value;
     const password = document.getElementById('editPasswordUsuario').value.trim();
@@ -281,7 +381,7 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    const payload = { nombre, email, rol };
+    const payload = { nombre, usuario, email, rol };
     if (password) payload.password = password;
 
     try {
@@ -518,6 +618,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   async function crearNuevoUsuario() {
     const nombre = document.getElementById('nuevoNombreUsuario').value.trim();
+    const usuario = document.getElementById('nuevoUsuarioUsuario').value.trim();
     const email = document.getElementById('nuevoCorreoUsuario').value.trim();
     const password = document.getElementById('nuevoPasswordUsuario').value.trim();
     const celular = document.getElementById('nuevoCelularUsuario').value.trim();
@@ -525,7 +626,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
 
-    if (!nombre || !email || !password || !rol) {
+    if (!nombre || !usuario || !email || !password || !rol) {
       alert("Por favor complete los campos obligatorios (Nombre, Email, Password, Rol) y asegúrese de no dejar espacios en blanco.");
       return;
     }
@@ -539,6 +640,7 @@ document.addEventListener('DOMContentLoaded', () => {
         },
         body: JSON.stringify({
           nombre: nombre,
+          usuario: usuario,
           email: email,
           password: password,
           celular: celular,
@@ -555,6 +657,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Limpiar formulario
         document.getElementById('nuevoNombreUsuario').value = '';
+        document.getElementById('nuevoUsuarioUsuario').value = '';
         document.getElementById('nuevoCorreoUsuario').value = '';
         document.getElementById('nuevoPasswordUsuario').value = '';
         document.getElementById('nuevoCelularUsuario').value = '';
@@ -801,7 +904,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const porCategoria = {};
 
     herramientas.forEach(h => {
-      if (!h.categoria) return; 
+      if (!h.categoria) return;
 
       const cat = h.categoria.nombre;
 
@@ -882,17 +985,17 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!toolsLista) return;
 
     if (herramientas.length === 0) {
-        toolsLista.innerHTML = `<div class="no-data muted">No hay herramientas registradas.</div>`;
-        return;
+      toolsLista.innerHTML = `<div class="no-data muted">No hay herramientas registradas.</div>`;
+      return;
     }
 
     toolsLista.innerHTML = herramientas.map((h, idx) => {
 
-        const categoriaNombre = h.categoria
-            ? h.categoria.nombre
-            : "Sin categoría";
+      const categoriaNombre = h.categoria
+        ? h.categoria.nombre
+        : "Sin categoría";
 
-        return `
+      return `
         <div class="tool-item" data-index="${idx}">
             <div class="tool-meta">
                 <div class="tool-name">${escapeHtml(h.nombre)}</div>
@@ -946,20 +1049,7 @@ document.addEventListener('DOMContentLoaded', () => {
       alert('Error eliminando herramienta.');
     }
   }
-  document.querySelectorAll('.categoria-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-          const catId = btn.dataset.cat;
-          const contenedor = document.getElementById(`cat-${catId}`);
-          contenedor.classList.toggle('hidden');
-      });
-  });
 
-  document.querySelectorAll('.sidebar-subitem').forEach(btn => {
-      btn.addEventListener('click', () => {
-          const url = btn.dataset.url;
-          if (url) window.open(url, '_blank');
-      });
-  });
 
   function escapeHtml(s) {
     s = String(s || '');
@@ -1170,6 +1260,29 @@ document.addEventListener('DOMContentLoaded', () => {
     if (target.closest('#btnNewUser')) abrirModal(document.getElementById('modalNuevoUsuario'));
     if (target.closest('#btnEvidence')) abrirModal(document.getElementById('modalEvidencias'));
     if (target.closest('#btnReport')) abrirModal(document.getElementById('modalReporte'));
+
+    // Sidebar Category Toggle (Delegated)
+    if (target.closest('.categoria-btn')) {
+      const btn = target.closest('.categoria-btn');
+      // Try Blade format (data-cat)
+      if (btn.dataset.cat) {
+        const content = document.getElementById(`cat-${btn.dataset.cat}`);
+        if (content) content.classList.toggle('hidden');
+      }
+      // Try JS format (data-target)
+      else if (btn.dataset.target) {
+        const content = document.getElementById(btn.dataset.target);
+        if (content) content.classList.toggle('hidden');
+      }
+    }
+
+    // Sidebar Subitem Click (Delegated)
+    if (target.closest('.sidebar-subitem')) {
+      const btn = target.closest('.sidebar-subitem');
+      const url = btn.dataset.url; // Blade uses data-url
+      // JS render uses onclick="window.open...", so this is mainly for Blade or if we switch JS to data-url
+      if (url) window.open(url, '_blank');
+    }
 
     // Close modals
     if (target.hasAttribute('data-modal-close')) {
