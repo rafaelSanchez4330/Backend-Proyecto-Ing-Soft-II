@@ -42,4 +42,16 @@ class ConsultorController extends Controller
         $caso = Caso::with(['creador', 'evidencias'])->findOrFail($id);
         return view('consultor.casos.detalle-caso', compact('caso'));
     }
+
+    public function usuariosCasosRelacionados($id)
+    {
+        // Obtener el usuario o lanzar 404
+        $usuario = Usuario::findOrFail($id);
+
+        // Obtener los casos creados por el usuario
+        $casos = $usuario->casosCreados;  // RELACIÓN YA DEFINIDA
+
+        //Retornar vista casos-relacionados, junto a las variables usuario y casos
+        return view('consultor.usuarios.casos-relacionados', compact('usuario', 'casos'));
+    }
 }
