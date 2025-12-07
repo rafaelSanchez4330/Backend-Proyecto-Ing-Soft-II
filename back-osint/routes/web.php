@@ -107,6 +107,8 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/inicio', [App\Http\Controllers\ConsultorController::class, 'inicio'])->name('consultor.inicio');
 
         // Usuarios
+        Route::get('/usuarios/{id}/casos-relacionados', [App\Http\Controllers\ConsultorController::class, 'usuariosCasosRelacionados'])->name('consultor.usuarios.casos-relacionados');
+
         Route::get('/usuarios/lista-usuarios', [App\Http\Controllers\ConsultorController::class, 'usuariosIndex'])->name('consultor.usuarios.index');
         Route::get('/usuarios/{id}', [App\Http\Controllers\ConsultorController::class, 'usuariosShow'])->name('consultor.usuarios.show');
 
